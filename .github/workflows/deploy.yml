@@ -40,9 +40,12 @@ jobs:
         rm -rf deploy
         mkdir -p deploy
         # Copiar TODO el contenido de dist/browser/ directamente a deploy/
-        # El trailing slash en dist/browser/ es importante para copiar el contenido, no la carpeta
-        rsync -av --exclude='.git' dist/browser/ deploy/
+        # Usar find para copiar todos los archivos y carpetas, incluyendo ocultos
+        cd dist/browser
+        find . -mindepth 1 -exec cp -r {} ../deploy/ \;
+        cd ../..
         # Verificar que se copió correctamente
+        echo "Contenido de deploy:"
         ls -la deploy/
       
     - name: Deploy to Hostinger (FTP)
@@ -53,6 +56,7 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./deploy/
         server-dir: ${{ secrets.FTP_PUBLIC_DIR }}
+        dangerous-clean-slate: false
         exclude: |
           **/.git*
           **/.git*/**
