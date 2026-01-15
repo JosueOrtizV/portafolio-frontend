@@ -39,26 +39,25 @@ jobs:
         # Limpiar deploy si existe
         rm -rf deploy
         mkdir -p deploy
-        # Cambiar al directorio browser y copiar TODO su contenido directamente a deploy/
-        cd dist/browser
-        # Copiar todos los archivos y carpetas (excepto . y ..) directamente
-        find . -mindepth 1 -maxdepth 1 ! -name 'browser' -exec cp -r {} ../deploy/ \;
-        cd ../..
+        # Copiar TODO el contenido de dist/browser/ directamente a deploy/
+        # Usar rsync con trailing slash para copiar contenido, no la carpeta
+        rsync -av --exclude='.git' dist/browser/ deploy/
         # Verificar que se copió correctamente
-        echo "=== Contenido de deploy/ ==="
+        echo "=== Contenido de deploy/ después de rsync ==="
         ls -la deploy/
-        echo "=== Verificando que NO hay carpeta browser ==="
+        # Si hay una carpeta browser dentro de deploy, mover su contenido
         if [ -d "deploy/browser" ]; then
-          echo "✗ ERROR: Hay carpeta browser en deploy, moviendo contenido..."
+          echo "✗ Detectada carpeta browser en deploy, moviendo contenido..."
           mv deploy/browser/* deploy/ 2>/dev/null || true
           mv deploy/browser/.* deploy/ 2>/dev/null || true
           rmdir deploy/browser 2>/dev/null || true
           echo "✓ Contenido de browser movido a deploy/"
-        else
-          echo "✓ No hay carpeta browser en deploy"
         fi
         echo "=== Contenido final de deploy/ ==="
         ls -la deploy/
+        echo "=== Verificando archivos importantes ==="
+        test -f deploy/index.html && echo "✓ index.html encontrado" || echo "✗ index.html NO encontrado"
+        test -f deploy/.htaccess && echo "✓ .htaccess encontrado" || echo "✗ .htaccess NO encontrado"
       
     - name: Deploy to Hostinger (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
