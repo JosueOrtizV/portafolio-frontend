@@ -36,15 +36,14 @@ jobs:
       
     - name: Prepare deployment files
       run: |
+        # Limpiar deploy si existe
+        rm -rf deploy
         mkdir -p deploy
-        rsync -av --exclude='.git' dist/browser/ deploy/ || {
-          # Fallback if rsync is not available
-          shopt -s dotglob nullglob
-          cp -r dist/browser/* deploy/ 2>/dev/null || true
-          for file in dist/browser/.*; do
-            [ -f "$file" ] && cp "$file" deploy/
-          done
-        }
+        # Copiar TODO el contenido de dist/browser/ directamente a deploy/
+        # El trailing slash en dist/browser/ es importante para copiar el contenido, no la carpeta
+        rsync -av --exclude='.git' dist/browser/ deploy/
+        # Verificar que se copió correctamente
+        ls -la deploy/
       
     - name: Deploy to Hostinger (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
