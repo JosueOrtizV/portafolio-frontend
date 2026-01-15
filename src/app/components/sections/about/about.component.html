@@ -1,0 +1,123 @@
+<section id="about" class="py-12 md:py-20 px-4">
+  <div class="container mx-auto max-w-6xl">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+      {{ i18n.sections.about() }}
+    </h2>
+    
+    @if (profile(); as profileData) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Photo Card -->
+        @if (profileData.photo) {
+          <div class="bento-card flex items-center justify-center">
+            <img 
+              [src]="profileData.photo" 
+              [alt]="profileData.full_name"
+              class="w-full h-auto rounded-xl object-cover"
+            />
+          </div>
+        }
+
+        <!-- Bio Card -->
+        <div class="bento-card space-y-4">
+          <div>
+            <h3 class="text-2xl font-bold mb-2">{{ profileData.full_name }}</h3>
+            <p class="text-blue-400 text-lg mb-4">
+              {{ i18n.getText(profileData.profession, profileData.profession_en) }}
+            </p>
+          </div>
+          
+          <!-- Full Biography -->
+          <div class="space-y-3 text-gray-300 leading-relaxed">
+            <p class="whitespace-pre-line">{{ i18n.getText(profileData.biography, profileData.biography_en) }}</p>
+          </div>
+          
+          <!-- Additional Info Section -->
+          @if (profileData.highlights && profileData.highlights.length > 0) {
+            <div class="pt-4 border-t border-white/10">
+              <h4 class="text-lg font-semibold mb-3 text-gray-200">
+                {{ i18n.language() === 'es' ? 'Sobre mí' : 'About me' }}
+              </h4>
+              <ul class="space-y-2 text-gray-300 text-sm">
+                @for (highlight of profileData.highlights; track $index) {
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-blue-400 mr-2 mt-1 flex-shrink-0"></i>
+                    <span>{{ i18n.getText(highlight.text_es, highlight.text_en) }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- Contact Info -->
+          <div class="pt-4 border-t border-white/10 space-y-3">
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-envelope text-blue-400"></i>
+              <a [href]="'mailto:' + profileData.email" class="text-blue-400 hover:text-blue-300 font-medium">
+                {{ profileData.email }}
+              </a>
+            </div>
+            @if (profileData.social_networks.phone) {
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-phone text-blue-400"></i>
+                <a [href]="'tel:' + profileData.social_networks.phone" class="text-blue-400 hover:text-blue-300 font-medium">
+                  {{ profileData.social_networks.phone }}
+                </a>
+              </div>
+            }
+            <div class="flex items-center space-x-2 text-gray-400">
+              <i class="fas fa-map-marker-alt text-blue-400"></i>
+              <span>{{ profileData.location }}</span>
+            </div>
+            
+            <!-- Social Networks -->
+            <div class="pt-2">
+              <p class="text-sm text-gray-500 mb-2">
+                {{ i18n.language() === 'es' ? 'Redes Sociales' : 'Social Networks' }}
+              </p>
+              <div class="flex items-center space-x-4">
+                @if (profileData.social_networks.linkedin) {
+                  <a 
+                    [href]="profileData.social_networks.linkedin" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-400 hover:text-blue-300 transition-colors no-underline"
+                    aria-label="LinkedIn"
+                  >
+                    <i class="fab fa-linkedin text-2xl"></i>
+                  </a>
+                }
+                @if (profileData.social_networks.github) {
+                  <a 
+                    [href]="profileData.social_networks.github" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-400 hover:text-blue-300 transition-colors no-underline"
+                    aria-label="GitHub"
+                  >
+                    <i class="fab fa-github text-2xl"></i>
+                  </a>
+                }
+                @if (profileData.social_networks.whatsapp) {
+                  <a 
+                    [href]="profileData.social_networks.whatsapp" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-green-400 hover:text-green-300 transition-colors no-underline"
+                    aria-label="WhatsApp"
+                  >
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-4 text-gray-400">Loading...</p>
+      </div>
+    }
+  </div>
+</section>

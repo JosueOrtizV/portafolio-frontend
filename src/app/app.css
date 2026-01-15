@@ -1,0 +1,21 @@
+@keyframes loading {
+  0%, 100% {
+    width: 30%;
+    opacity: 0.7;
+  }
+  50% {
+    width: 90%;
+    opacity: 1;
+  }
+}
+
+/* Scroll offset for fixed header */
+section[id] {
+  scroll-margin-top: 40px; /* Espacio para el header fijo */
+}
+
+@media (max-width: 768px) {
+  section[id] {
+    scroll-margin-top: 20px; /* Menos espacio en móvil */
+  }
+}

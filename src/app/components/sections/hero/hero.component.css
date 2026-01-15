@@ -1,0 +1,53 @@
+/* Component specific styles */
+/* Hero section - Full viewport height */
+#home {
+  /* Usar JavaScript para establecer altura real del viewport */
+  height: var(--vh, 100vh);
+  min-height: 100vh;
+  /* Fallback con dvh para navegadores modernos */
+  min-height: 100dvh;
+}
+
+/* Hero section mobile optimizations */
+@media (max-width: 640px) {
+  #home {
+    /* Asegurar altura completa en móvil considerando barras del navegador */
+    height: var(--vh, 100vh);
+    min-height: -webkit-fill-available; /* Safari iOS */
+    min-height: 100vh; /* Fallback */
+  }
+  
+  #home .container {
+    max-width: 100%;
+  }
+  
+  #home img {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  #home h1 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  
+  #home p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  #home .flex.flex-col {
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  
+  #home a {
+    width: 100%;
+    max-width: 280px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}

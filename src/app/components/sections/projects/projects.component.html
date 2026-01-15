@@ -1,0 +1,291 @@
+<section id="projects" class="py-12 md:py-20 px-4">
+  <div class="container mx-auto max-w-7xl">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+      {{ i18n.sections.projects() }}
+    </h2>
+    
+    @if (projects().length > 0) {
+      <!-- Featured Projects (Bento Grid) -->
+      @if (getFeaturedProjects().length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          @for (project of getFeaturedProjects(); track project.id) {
+            <div 
+              class="bento-card group cursor-pointer" 
+              [class.md:col-span-2]="$index === 0"
+              (click)="openProject(project)"
+            >
+              @if (project.image_principal) {
+                <div class="relative overflow-hidden rounded-lg mb-4 aspect-video">
+                  <img 
+                    [src]="project.image_principal" 
+                    [alt]="i18n.getText(project.title, project.title_en)"
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div class="absolute top-2 right-2 glass px-2 py-1 rounded text-xs font-semibold">
+                    {{ i18n.language() === 'es' ? 'Destacado' : 'Featured' }}
+                  </div>
+                </div>
+              }
+              
+              <h3 class="text-xl font-bold mb-2">
+                {{ i18n.getText(project.title, project.title_en) }}
+              </h3>
+              <p class="text-gray-400 mb-4 line-clamp-2">
+                {{ i18n.getText(project.short_description, project.short_description_en) }}
+              </p>
+              
+              <!-- Technologies -->
+              <div class="flex flex-wrap gap-2 mb-4">
+                @for (tech of project.technologies.slice(0, 4); track tech) {
+                  <span class="text-xs glass px-2 py-1 rounded">{{ tech }}</span>
+                }
+                @if (project.technologies.length > 4) {
+                  <span class="text-xs text-gray-500">+{{ project.technologies.length - 4 }}</span>
+                }
+              </div>
+
+              <!-- Links -->
+              <div class="flex gap-3">
+                @if (project.url_demo) {
+                  <a 
+                    [href]="project.url_demo" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white text-sm"
+                    (click)="$event.stopPropagation()"
+                  >
+                    {{ i18n.language() === 'es' ? 'Ver Demo' : 'View Demo' }}
+                  </a>
+                }
+                @if (project.url_repo) {
+                  <a 
+                    [href]="project.url_repo" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-400 hover:text-blue-300 text-sm font-medium"
+                    (click)="$event.stopPropagation()"
+                  >
+                    {{ i18n.language() === 'es' ? 'Código' : 'Code' }} →
+                  </a>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- All Projects Grid (sin destacados) -->
+      @if (getAllProjects().length > 0) {
+        <div>
+          <h3 class="text-2xl font-bold mb-6 text-center text-gray-300">
+            {{ i18n.language() === 'es' ? 'Otros Proyectos' : 'Other Projects' }}
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (project of getAllProjects(); track project.id) {
+              <div 
+                class="bento-card group cursor-pointer"
+                (click)="openProject(project)"
+              >
+                @if (project.image_principal) {
+                  <div class="relative overflow-hidden rounded-lg mb-4 aspect-video">
+                    <img 
+                      [src]="project.image_principal" 
+                      [alt]="i18n.getText(project.title, project.title_en)"
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                }
+                
+                <h3 class="text-lg font-bold mb-2">
+                  {{ i18n.getText(project.title, project.title_en) }}
+                </h3>
+                <p class="text-gray-400 mb-4 text-sm line-clamp-2">
+                  {{ i18n.getText(project.short_description, project.short_description_en) }}
+                </p>
+                
+                <!-- Technologies -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                  @for (tech of project.technologies.slice(0, 3); track tech) {
+                    <span class="text-xs glass px-2 py-1 rounded">{{ tech }}</span>
+                  }
+                </div>
+
+                <!-- Links -->
+                <div class="flex gap-3 text-sm">
+                  @if (project.url_demo) {
+                    <a 
+                      [href]="project.url_demo" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-blue-400 hover:text-blue-300 font-medium"
+                      (click)="$event.stopPropagation()"
+                    >
+                      {{ i18n.language() === 'es' ? 'Demo' : 'Demo' }} →
+                    </a>
+                  }
+                @if (project.url_repo) {
+                  <a 
+                    [href]="project.url_repo" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-400 hover:text-blue-300 font-medium"
+                    (click)="$event.stopPropagation()"
+                  >
+                    {{ i18n.language() === 'es' ? 'Código' : 'Code' }} →
+                  </a>
+                }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-4 text-gray-400">Loading...</p>
+      </div>
+    }
+  </div>
+
+  <!-- Project Detail Modal -->
+  @if (showProjectModal() && selectedProject(); as project) {
+    <div 
+      class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm"
+      (click)="closeProjectModal()"
+    >
+      <div class="flex items-center justify-center min-h-screen px-4 py-8">
+        <div 
+          class="glass-dark rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="p-6 md:p-8 relative">
+            <!-- Close Button -->
+            <button 
+              (click)="closeProjectModal()"
+              class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors z-10"
+            >
+              <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <!-- Project Images Gallery -->
+            @if (getProjectImages().length > 0) {
+              <div class="mb-6">
+                <!-- Main Image Display -->
+                <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 group">
+                  <img 
+                    [src]="getProjectImages()[selectedImageIndex()]" 
+                    [alt]="i18n.getText(project.title, project.title_en) + ' - Image ' + (selectedImageIndex() + 1)"
+                    class="w-full h-full object-cover"
+                  />
+                  
+                  <!-- Navigation Arrows -->
+                  @if (getProjectImages().length > 1) {
+                    <button
+                      (click)="previousImage()"
+                      class="absolute left-4 top-1/2 -translate-y-1/2 glass px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
+                      aria-label="Previous image"
+                    >
+                      <i class="fas fa-chevron-left text-white"></i>
+                    </button>
+                    <button
+                      (click)="nextImage()"
+                      class="absolute right-4 top-1/2 -translate-y-1/2 glass px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
+                      aria-label="Next image"
+                    >
+                      <i class="fas fa-chevron-right text-white"></i>
+                    </button>
+                    
+                    <!-- Image Counter -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 glass px-3 py-1 rounded-full text-sm">
+                      {{ selectedImageIndex() + 1 }} / {{ getProjectImages().length }}
+                    </div>
+                  }
+                </div>
+                
+                <!-- Thumbnail Gallery -->
+                @if (getProjectImages().length > 1) {
+                  <div class="grid grid-cols-4 md:grid-cols-6 gap-2 mt-3 max-h-32 overflow-y-auto custom-scrollbar">
+                    @for (image of getProjectImages(); track image; let i = $index) {
+                      <div 
+                        class="relative aspect-video rounded overflow-hidden cursor-pointer transition-all border-2"
+                        [class.border-blue-400]="selectedImageIndex() === i"
+                        [class.border-transparent]="selectedImageIndex() !== i"
+                        (click)="selectImage(i)"
+                      >
+                        <img 
+                          [src]="image" 
+                          [alt]="'Thumbnail ' + (i + 1)" 
+                          class="w-full h-full object-cover hover:opacity-75 transition-opacity"
+                        />
+                        @if (selectedImageIndex() === i) {
+                          <div class="absolute inset-0 bg-blue-400/20"></div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Project Info -->
+            <div class="space-y-4">
+              <h2 class="text-3xl md:text-4xl font-bold">
+                {{ i18n.getText(project.title, project.title_en) }}
+              </h2>
+              
+              <p class="text-xl text-gray-300">
+                {{ i18n.getText(project.short_description, project.short_description_en) }}
+              </p>
+
+              <div class="prose prose-invert max-w-none">
+                <p class="text-gray-400 leading-relaxed whitespace-pre-line">
+                  {{ i18n.getText(project.description, project.description_en) }}
+                </p>
+              </div>
+
+              <!-- Technologies -->
+              <div>
+                <h3 class="text-lg font-bold mb-3">
+                  {{ i18n.language() === 'es' ? 'Tecnologías' : 'Technologies' }}
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  @for (tech of project.technologies; track tech) {
+                    <span class="glass px-3 py-1 rounded-full text-sm">{{ tech }}</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Links -->
+              <div class="flex gap-4 pt-4 border-t border-white/10">
+                @if (project.url_demo) {
+                  <a 
+                    [href]="project.url_demo" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white"
+                  >
+                    <i class="fas fa-external-link-alt mr-2"></i>
+                    {{ i18n.language() === 'es' ? 'Ver Demo' : 'View Demo' }}
+                  </a>
+                }
+                @if (project.url_repo) {
+                  <a 
+                    [href]="project.url_repo" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="glass px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all"
+                  >
+                    <i class="fab fa-github mr-2"></i>
+                    {{ i18n.language() === 'es' ? 'Ver Código' : 'View Code' }}
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

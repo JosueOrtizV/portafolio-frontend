@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-900 text-gray-100 antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-md border border-white/10;
+  }
+  
+  .bento-card {
+    @apply glass rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
+  }
+}
+
+@layer base {
+  /* Estilos globales para enlaces */
+  a {
+    @apply text-blue-400 hover:text-blue-300 transition-colors;
+  }
+  
+  /* Enlaces en texto normal deben ser más visibles */
+  a:not(.no-link-style):not(.no-underline):not(.glass):not(.bg-gradient-to-r) {
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    text-decoration-color: rgb(96 165 250 / 0.5);
+  }
+  
+  a:not(.no-link-style):not(.no-underline):not(.glass):not(.bg-gradient-to-r):hover {
+    text-decoration-color: rgb(147 197 253);
+  }
+  
+  /* Excepciones: botones y elementos especiales no deben tener underline */
+  a.glass,
+  a.bg-gradient-to-r,
+  button,
+  .no-underline {
+    text-decoration: none;
+  }
+}

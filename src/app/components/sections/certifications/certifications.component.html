@@ -1,0 +1,66 @@
+<section id="certifications" class="py-12 md:py-20 px-4">
+  <div class="container mx-auto max-w-6xl">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+      {{ i18n.sections.certifications() }}
+    </h2>
+    
+    @if (certifications().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        @for (cert of certifications(); track cert.id) {
+          <div class="bento-card">
+            @if (cert.image) {
+              <div class="mb-4 rounded-lg overflow-hidden">
+                <img 
+                  [src]="cert.image" 
+                  [alt]="i18n.getText(cert.title, cert.title_en)"
+                  class="w-full h-auto object-cover"
+                />
+              </div>
+            }
+            
+            <h3 class="text-lg font-bold mb-2">
+              {{ i18n.getText(cert.title, cert.title_en) }}
+            </h3>
+            <p class="text-blue-400 mb-2">{{ cert.issuing_organization }}</p>
+            
+            @if (cert.issue_date) {
+              <p class="text-gray-400 text-sm mb-2">
+                {{ i18n.language() === 'es' ? 'Emitido:' : 'Issued:' }} {{ formatDate(cert.issue_date) }}
+              </p>
+            }
+            
+            @if (cert.credential_url) {
+              <a 
+                [href]="cert.credential_url" 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-400 hover:text-blue-300 text-sm inline-block"
+              >
+                {{ i18n.language() === 'es' ? 'Ver credencial' : 'View credential' }} →
+              </a>
+            }
+          </div>
+        }
+      </div>
+      
+      @if (profile()?.certifications_link) {
+        <div class="text-center mt-8">
+          <a 
+            [href]="profile()!.certifications_link!" 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white"
+          >
+            <i class="fas fa-external-link-alt mr-2"></i>
+            {{ i18n.language() === 'es' ? 'Ver Todas las Certificaciones' : 'View All Certifications' }}
+          </a>
+        </div>
+      }
+    } @else {
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-4 text-gray-400">Loading...</p>
+      </div>
+    }
+  </div>
+</section>

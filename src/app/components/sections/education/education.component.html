@@ -1,0 +1,61 @@
+<section id="education" class="py-12 md:py-20 px-4">
+  <div class="container mx-auto max-w-6xl">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+      {{ i18n.sections.education() }}
+    </h2>
+    
+    @if (educations().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @for (edu of educations(); track edu.id) {
+          <div class="bento-card">
+            <div class="flex gap-4">
+              <!-- Logo -->
+              @if (edu.institution_logo) {
+                <div class="flex-shrink-0">
+                  <img 
+                    [src]="edu.institution_logo" 
+                    [alt]="edu.institution"
+                    class="w-16 h-16 object-contain rounded-lg bg-white"
+                  />
+                </div>
+              }
+              
+              <!-- Content -->
+              <div class="flex-1">
+                <h3 class="text-lg font-bold mb-1">{{ edu.institution }}</h3>
+                <p class="text-blue-400 mb-2">
+                  {{ i18n.getText(edu.degree, edu.degree_en) }}
+                </p>
+                @if (i18n.getText(edu.field_of_study, edu.field_of_study_en)) {
+                  <p class="text-gray-400 text-sm mb-2">{{ i18n.getText(edu.field_of_study, edu.field_of_study_en) }}</p>
+                }
+                <p class="text-gray-400 text-sm">
+                  @if (edu.end_date) {
+                    {{ formatDate(edu.start_date) }} - {{ formatDate(edu.end_date) }}
+                  } @else {
+                    {{ formatDate(edu.start_date) }} - {{ i18n.language() === 'es' ? 'Actualidad' : 'Present' }}
+                  }
+                </p>
+                @if (edu.institution_url) {
+                  <a 
+                    [href]="edu.institution_url" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-400 hover:text-blue-300 text-sm mt-2 inline-block font-medium"
+                  >
+                    {{ i18n.language() === 'es' ? 'Visitar sitio' : 'Visit site' }} →
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-4 text-gray-400">Loading...</p>
+      </div>
+    }
+  </div>
+</section>
