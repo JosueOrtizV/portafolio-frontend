@@ -16,7 +16,7 @@ import {
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = '/api';
+  private readonly apiUrl = 'https://api.josueortiz.dev/api';
 
   // Projects
   getProjects(): Observable<Project[]> {
