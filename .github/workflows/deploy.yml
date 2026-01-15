@@ -39,14 +39,19 @@ jobs:
         # Limpiar deploy si existe
         rm -rf deploy
         mkdir -p deploy
-        # Copiar TODO el contenido de dist/browser/ directamente a deploy/
-        # Usar find para copiar todos los archivos y carpetas, incluyendo ocultos
-        cd dist/browser
-        find . -mindepth 1 -exec cp -r {} ../deploy/ \;
-        cd ../..
+        # Copiar SOLO el contenido de dist/browser/ directamente a deploy/
+        # El punto al final de dist/browser/. copia el contenido, no la carpeta
+        cp -r dist/browser/. deploy/ 2>&1 || {
+          # Si falla, usar método alternativo
+          cd dist/browser
+          find . -mindepth 1 -maxdepth 1 -exec cp -r {} ../../deploy/ \;
+          cd ../..
+        }
         # Verificar que se copió correctamente
-        echo "Contenido de deploy:"
+        echo "=== Contenido de deploy/ ==="
         ls -la deploy/
+        echo "=== Verificando que NO hay carpeta browser ==="
+        test ! -d deploy/browser && echo "✓ No hay carpeta browser en deploy" || echo "✗ ERROR: Hay carpeta browser en deploy"
       
     - name: Deploy to Hostinger (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -56,7 +61,6 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./deploy/
         server-dir: ${{ secrets.FTP_PUBLIC_DIR }}
-        dangerous-clean-slate: false
         exclude: |
           **/.git*
           **/.git*/**
