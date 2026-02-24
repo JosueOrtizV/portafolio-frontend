@@ -20,14 +20,15 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, ViewChild, ElementRef
     }
 
     .spline-container {
-      overflow: visible;
+      overflow: visible !important;
+      transform-style: preserve-3d;
     }
 
     spline-viewer {
       width: 100%;
       height: 100%;
       display: block;
-      overflow: visible;
+      overflow: visible !important;
     }
   `]
 })
@@ -39,30 +40,43 @@ export class Hero3dViewerComponent implements AfterViewInit {
   }
 
   private hideSplineLogo(): void {
-    // El logo está en el Shadow DOM, necesitamos acceder ahí con JS
+    // El logo y el canvas están en el Shadow DOM, necesitamos acceder ahí con JS
     const checkAndHide = () => {
       const el = this.splineEl?.nativeElement;
       if (!el) return;
 
       const shadow = el.shadowRoot;
       if (shadow) {
+        // 1. Ocultar el Logo
         const logo = shadow.querySelector('#logo');
         if (logo) {
-          // Spline a veces fuerza el display, así que usamos un enfoque más agresivo
           const logoEl = logo as HTMLElement;
           logoEl.style.setProperty('display', 'none', 'important');
           logoEl.style.opacity = '0';
           logoEl.style.visibility = 'hidden';
           logoEl.style.pointerEvents = 'none';
-
-          // O intentar removerlo del DOM directamente
           try {
             logoEl.remove();
           } catch (e) { }
+        }
 
-          return; // Logo encontrado y ocultado
+        // 2. Arreglar el recorte (overflow) oculto en producción
+        const container = shadow.querySelector('#container') as HTMLElement;
+        const canvas = shadow.querySelector('#spline') as HTMLElement;
+        if (container) {
+          container.style.overflow = 'visible';
+          container.style.setProperty('overflow', 'visible', 'important');
+        }
+        if (canvas) {
+          canvas.style.overflow = 'visible';
+          canvas.style.setProperty('overflow', 'visible', 'important');
+
+          if (logo || container || canvas) {
+            return;
+          }
         }
       }
+
       // Si aún no existe (la escena sigue cargando), reintentar
       requestAnimationFrame(checkAndHide);
     };
