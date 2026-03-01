@@ -17,7 +17,7 @@ import {
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api';
+  private readonly apiUrl = 'https://api.josueortiz.dev/api';
 
   // Global Unified Cache
   private portfolioCache$?: Observable<PortfolioData>;
