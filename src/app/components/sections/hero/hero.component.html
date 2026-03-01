@@ -3,8 +3,15 @@
     <div class="text-center space-y-6">
       @if (profile(); as profileData) {
       <!-- 3D Spline Viewer (replaces static photo) -->
-      <div class="block mx-auto max-w-sm md:max-w-xl mb-6 md:mb-8 overflow-visible">
+      <div class="block mx-auto max-w-sm md:max-w-xl mb-0 overflow-visible min-h-[220px] md:min-h-[320px]">
+        @defer (on viewport) {
         <app-hero-3d-viewer></app-hero-3d-viewer>
+        } @placeholder {
+        <div
+          class="w-full h-[220px] md:h-[320px] flex items-center justify-center bg-gray-800/20 rounded-xl animate-pulse">
+          <div class="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+        }
       </div>
 
       <!-- Name & Profession -->

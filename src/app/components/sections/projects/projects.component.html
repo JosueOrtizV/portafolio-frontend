@@ -14,8 +14,8 @@
       <div class="bento-card group cursor-pointer" [class.md:col-span-2]="$index === 0" (click)="openProject(project)">
         @if (project.image_principal) {
         <div class="relative overflow-hidden rounded-lg mb-4 aspect-video">
-          <img [src]="project.image_principal" [alt]="i18n.getText(project.title, project.title_en)"
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+          <img [ngSrc]="project.image_principal" fill [alt]="i18n.getText(project.title, project.title_en)"
+            class="object-cover transition-transform duration-300 group-hover:scale-110" [priority]="true" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
           <div
             class="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-black/50 border border-white/10 z-10 uppercase tracking-wide">
@@ -75,8 +75,8 @@
         <div class="bento-card group cursor-pointer" (click)="openProject(project)">
           @if (project.image_principal) {
           <div class="relative overflow-hidden rounded-lg mb-4 aspect-video">
-            <img [src]="project.image_principal" [alt]="i18n.getText(project.title, project.title_en)"
-              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+            <img [ngSrc]="project.image_principal" fill [alt]="i18n.getText(project.title, project.title_en)"
+              class="object-cover transition-transform duration-300 group-hover:scale-110" />
           </div>
           }
 
@@ -141,9 +141,9 @@
           <div class="mb-6">
             <!-- Main Image Display -->
             <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 group">
-              <img [src]="getProjectImages()[selectedImageIndex()]"
+              <img [ngSrc]="getProjectImages()[selectedImageIndex()]" fill
                 [alt]="i18n.getText(project.title, project.title_en) + ' - Image ' + (selectedImageIndex() + 1)"
-                class="w-full h-full object-cover" />
+                class="object-cover" />
 
               <!-- Navigation Arrows -->
               @if (getProjectImages().length > 1) {
@@ -172,8 +172,8 @@
               <div class="relative aspect-video rounded overflow-hidden cursor-pointer transition-all border-2"
                 [class.border-blue-400]="selectedImageIndex() === i"
                 [class.border-transparent]="selectedImageIndex() !== i" (click)="selectImage(i)">
-                <img [src]="image" [alt]="'Thumbnail ' + (i + 1)"
-                  class="w-full h-full object-cover hover:opacity-75 transition-opacity" />
+                <img [ngSrc]="image" fill [alt]="'Thumbnail ' + (i + 1)"
+                  class="object-cover hover:opacity-75 transition-opacity" />
                 @if (selectedImageIndex() === i) {
                 <div class="absolute inset-0 bg-blue-400/20"></div>
                 }

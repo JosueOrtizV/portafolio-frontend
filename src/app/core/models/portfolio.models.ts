@@ -130,3 +130,12 @@ export interface Message {
   created_at: string;
   updated_at: string;
 }
+
+export interface PortfolioData {
+  profile: Profile;
+  projects: Project[];
+  skills: Skill[];
+  experiences: Experience[];
+  educations: Education[];
+  certifications: Certification[];
+}

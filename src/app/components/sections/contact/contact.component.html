@@ -1,81 +1,68 @@
 <section id="contact" class="py-12 md:py-20 px-4">
   <div class="container mx-auto max-w-4xl">
-    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+    <h2
+      class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
       {{ i18n.sections.contact() }}
     </h2>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Contact Info -->
       @if (profile(); as profileData) {
-        <div class="bento-card space-y-6">
-          <div>
-            <h3 class="text-2xl font-bold mb-4">
-              {{ i18n.language() === 'es' ? 'Información de Contacto' : 'Contact Information' }}
-            </h3>
-            <div class="space-y-4">
-              <div class="flex items-center space-x-3">
-                <i class="fas fa-envelope text-blue-400"></i>
-                <a [href]="'mailto:' + profileData.email" class="text-gray-300 hover:text-blue-400 transition-colors">
-                  {{ profileData.email }}
-                </a>
-              </div>
-              @if (profileData.social_networks.phone) {
-                <div class="flex items-center space-x-3">
-                  <i class="fas fa-phone text-blue-400"></i>
-                  <a [href]="'tel:' + profileData.social_networks.phone" class="text-gray-300 hover:text-blue-400 transition-colors">
-                    {{ profileData.social_networks.phone }}
-                  </a>
-                </div>
-              }
-              <div class="flex items-center space-x-3">
-                <i class="fas fa-map-marker-alt text-blue-400"></i>
-                <span class="text-gray-300">{{ profileData.location }}</span>
-              </div>
+      <div class="bento-card space-y-6">
+        <div>
+          <h3 class="text-2xl font-bold mb-4">
+            {{ i18n.language() === 'es' ? 'Información de Contacto' : 'Contact Information' }}
+          </h3>
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-envelope text-blue-400"></i>
+              <a [href]="'mailto:' + profileData.email" class="text-gray-300 hover:text-blue-400 transition-colors">
+                {{ profileData.email }}
+              </a>
             </div>
-          </div>
-
-          <!-- Social Links -->
-          <div>
-            <h4 class="text-lg font-bold mb-3">
-              {{ i18n.language() === 'es' ? 'Redes Sociales' : 'Social Networks' }}
-            </h4>
-            <div class="flex space-x-4">
-              @if (profileData.social_networks.linkedin) {
-                <a 
-                  [href]="profileData.social_networks.linkedin" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-blue-400 hover:text-blue-300 transition-colors no-underline"
-                  aria-label="LinkedIn"
-                >
-                  <i class="fab fa-linkedin text-2xl"></i>
-                </a>
-              }
-              @if (profileData.social_networks.github) {
-                <a 
-                  [href]="profileData.social_networks.github" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-blue-400 hover:text-blue-300 transition-colors no-underline"
-                  aria-label="GitHub"
-                >
-                  <i class="fab fa-github text-2xl"></i>
-                </a>
-              }
-              @if (profileData.social_networks.whatsapp) {
-                <a 
-                  [href]="profileData.social_networks.whatsapp" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-green-400 hover:text-green-300 transition-colors no-underline"
-                  aria-label="WhatsApp"
-                >
-                  <i class="fab fa-whatsapp text-2xl"></i>
-                </a>
-              }
+            @if (profileData.social_networks.phone) {
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-phone text-blue-400"></i>
+              <a [href]="'tel:' + profileData.social_networks.phone"
+                class="text-gray-300 hover:text-blue-400 transition-colors">
+                {{ profileData.social_networks.phone }}
+              </a>
+            </div>
+            }
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-map-marker-alt text-blue-400"></i>
+              <span class="text-gray-300">{{ profileData.location }}</span>
             </div>
           </div>
         </div>
+
+        <!-- Social Links -->
+        <div>
+          <h4 class="text-lg font-bold mb-3">
+            {{ i18n.language() === 'es' ? 'Redes Sociales' : 'Social Networks' }}
+          </h4>
+          <div class="flex space-x-4">
+            @if (profileData.social_networks.linkedin) {
+            <a [href]="profileData.social_networks.linkedin" target="_blank" rel="noopener noreferrer"
+              class="text-blue-400 hover:text-blue-300 transition-colors no-underline" aria-label="LinkedIn">
+              <i class="fab fa-linkedin text-2xl"></i>
+            </a>
+            }
+            @if (profileData.social_networks.github) {
+            <a [href]="profileData.social_networks.github" target="_blank" rel="noopener noreferrer"
+              class="text-blue-400 hover:text-blue-300 transition-colors no-underline" aria-label="GitHub">
+              <i class="fab fa-github text-2xl"></i>
+            </a>
+            }
+            @if (profileData.social_networks.whatsapp) {
+            <a [href]="profileData.social_networks.whatsapp" target="_blank" rel="noopener noreferrer"
+              class="text-green-400 hover:text-green-300 transition-colors no-underline" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp text-2xl"></i>
+            </a>
+            }
+          </div>
+        </div>
+      </div>
       }
 
       <!-- Contact Form -->
@@ -83,80 +70,59 @@
         <h3 class="text-2xl font-bold mb-6">
           {{ i18n.language() === 'es' ? 'Enviar Mensaje' : 'Send Message' }}
         </h3>
-        
+
         @if (submitSuccess()) {
-          <div class="bg-green-500/20 border border-green-500/50 rounded-lg p-4 mb-4">
-            <p class="text-green-400">
-              {{ i18n.language() === 'es' ? '¡Mensaje enviado exitosamente!' : 'Message sent successfully!' }}
-            </p>
-          </div>
+        <div class="bg-green-500/20 border border-green-500/50 rounded-lg p-4 mb-4">
+          <p class="text-green-400">
+            {{ i18n.language() === 'es' ? '¡Mensaje enviado exitosamente!' : 'Message sent successfully!' }}
+          </p>
+        </div>
         }
-        
+
         @if (submitError(); as error) {
-          <div class="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-4">
-            <p class="text-red-400">{{ error }}</p>
-          </div>
+        <div class="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-4">
+          <p class="text-red-400">{{ error }}</p>
+        </div>
         }
 
         <form (ngSubmit)="onSubmit()" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-2">
+            <label for="name" class="block text-sm font-medium mb-2">
               {{ i18n.language() === 'es' ? 'Nombre' : 'Name' }}
             </label>
-            <input 
-              type="text" 
-              [(ngModel)]="formData().name"
-              [name]="'name'"
-              required
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <input id="name" type="text" [(ngModel)]="formData().name" [name]="'name'" required
+              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-2">Email</label>
-            <input 
-              type="email" 
-              [(ngModel)]="formData().email"
-              [name]="'email'"
-              required
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <label for="email" class="block text-sm font-medium mb-2">Email</label>
+            <input id="email" type="email" [(ngModel)]="formData().email" [name]="'email'" required
+              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-2">
-              {{ i18n.language() === 'es' ? 'Asunto' : 'Subject' }} ({{ i18n.language() === 'es' ? 'Opcional' : 'Optional' }})
+            <label for="subject" class="block text-sm font-medium mb-2">
+              {{ i18n.language() === 'es' ? 'Asunto' : 'Subject' }} ({{ i18n.language() === 'es' ? 'Opcional' :
+              'Optional' }})
             </label>
-            <input 
-              type="text" 
-              [(ngModel)]="formData().subject"
-              [name]="'subject'"
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <input id="subject" type="text" [(ngModel)]="formData().subject" [name]="'subject'"
+              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-2">
+            <label for="message" class="block text-sm font-medium mb-2">
               {{ i18n.language() === 'es' ? 'Mensaje' : 'Message' }}
             </label>
-            <textarea 
-              [(ngModel)]="formData().message"
-              [name]="'message'"
-              required
-              rows="5"
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-            ></textarea>
+            <textarea id="message" [(ngModel)]="formData().message" [name]="'message'" required rows="5"
+              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
           </div>
 
-          <button 
-            type="submit"
-            [disabled]="isSubmitting()"
-            class="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <button type="submit" [disabled]="isSubmitting()"
+            class="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
             @if (isSubmitting()) {
-              {{ i18n.language() === 'es' ? 'Enviando...' : 'Sending...' }}
+            {{ i18n.language() === 'es' ? 'Enviando...' : 'Sending...' }}
             } @else {
-              {{ i18n.language() === 'es' ? 'Enviar Mensaje' : 'Send Message' }}
+            {{ i18n.language() === 'es' ? 'Enviar Mensaje' : 'Send Message' }}
             }
           </button>
         </form>

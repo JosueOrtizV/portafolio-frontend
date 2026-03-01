@@ -1,5 +1,5 @@
 import { Component, inject, signal, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ApiService } from '../../../core/services/api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,7 +16,7 @@ import {
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css',
   animations: [

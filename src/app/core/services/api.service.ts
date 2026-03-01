@@ -1,14 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { 
-  Project, 
-  Skill, 
-  Profile, 
-  Experience, 
-  Education, 
+import { Observable, shareReplay, map } from 'rxjs';
+import {
+  Project,
+  Skill,
+  Profile,
+  Experience,
+  Education,
   Certification,
-  Message 
+  Message,
+  PortfolioData
 } from '../models/portfolio.models';
 
 @Injectable({
@@ -16,11 +17,26 @@ import {
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://api.josueortiz.dev/api';
+  private readonly apiUrl = 'http://localhost:8000/api';
+
+  // Global Unified Cache
+  private portfolioCache$?: Observable<PortfolioData>;
+
+  /**
+   * Obtiene todos los datos del portafolio en una sola petición.
+   */
+  getPortfolioData(): Observable<PortfolioData> {
+    if (!this.portfolioCache$) {
+      this.portfolioCache$ = this.http.get<PortfolioData>(`${this.apiUrl}/portfolio`).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.portfolioCache$;
+  }
 
   // Projects
   getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.apiUrl}/projects`);
+    return this.getPortfolioData().pipe(map(data => data.projects));
   }
 
   getProjectBySlug(slug: string): Observable<Project> {
@@ -29,30 +45,30 @@ export class ApiService {
 
   // Profile
   getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(`${this.apiUrl}/profile`);
+    return this.getPortfolioData().pipe(map(data => data.profile));
   }
 
   // Skills
   getSkills(): Observable<Skill[]> {
-    return this.http.get<Skill[]>(`${this.apiUrl}/skills`);
+    return this.getPortfolioData().pipe(map(data => data.skills));
   }
 
   // Experiences
   getExperiences(): Observable<Experience[]> {
-    return this.http.get<Experience[]>(`${this.apiUrl}/experiences`);
+    return this.getPortfolioData().pipe(map(data => data.experiences));
   }
 
   // Educations
   getEducations(): Observable<Education[]> {
-    return this.http.get<Education[]>(`${this.apiUrl}/educations`);
+    return this.getPortfolioData().pipe(map(data => data.educations));
   }
 
   // Certifications
   getCertifications(): Observable<Certification[]> {
-    return this.http.get<Certification[]>(`${this.apiUrl}/certifications`);
+    return this.getPortfolioData().pipe(map(data => data.certifications));
   }
 
-  // Messages
+  // Messages (no cacheado)
   sendMessage(message: Partial<Message>): Observable<Message> {
     return this.http.post<Message>(`${this.apiUrl}/messages`, message);
   }
