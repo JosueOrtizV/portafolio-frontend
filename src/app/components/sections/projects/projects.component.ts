@@ -1,51 +1,43 @@
-import { Component, inject, signal, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, ElementRef, ViewChild, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ApiService } from '../../../core/services/api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Project } from '../../../core/models/portfolio.models';
-import {
-  trigger,
-  transition,
-  style,
-  animate,
-  query,
-  stagger,
-} from '@angular/animations';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 @Component({
   selector: 'app-projects',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './projects.component.html',
-  styleUrl: './projects.component.css',
-  animations: [
-    trigger('staggerCards', [
-      transition(':enter', [
-        query('.voxel-card', [
-          style({ opacity: 0, transform: 'translateY(40px)' }),
-          stagger(120, [
-            animate('500ms cubic-bezier(0.35, 0, 0.25, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
-          ])
-        ], { optional: true })
-      ])
-    ])
-  ]
+  styleUrl: './projects.component.css'
 })
-export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectsComponent implements OnInit, OnDestroy {
   public readonly i18n = inject(I18nService);
   public readonly api = inject(ApiService);
 
   public readonly projects = toSignal(this.api.getProjects(), { initialValue: [] as Project[] });
-
-  // Control de visibilidad para las animaciones
-  public cardsVisible = signal(false);
 
   @ViewChild('projectsSection') projectsSection!: ElementRef<HTMLElement>;
 
   // Typewriter effect for header logs used in projects.component.html
   public systemLogText = signal<string>('');
   private typingIntervalId: any = null;
+
+  constructor() {
+    effect(() => {
+      const projectsData = this.projects();
+      if (projectsData && projectsData.length > 0) {
+        setTimeout(() => {
+          this.initScrollAnimations();
+        }, 150);
+      }
+    });
+  }
 
   ngOnInit() {
     const fullText = "SYSTEM_LOG: INITIALIZING_DATA_FETCH... [DONE]\nACCESSING REPOSITORY: VOXEL_CORE_V2";
@@ -60,29 +52,12 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 15);
   }
 
-  ngAfterViewInit() {
-    // Usar IntersectionObserver para activar la animación cuando la sección sea visible
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !this.cardsVisible()) {
-            this.cardsVisible.set(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (this.projectsSection?.nativeElement) {
-      observer.observe(this.projectsSection.nativeElement);
-    }
-  }
-
   ngOnDestroy(): void {
     if (this.typingIntervalId) {
       clearInterval(this.typingIntervalId);
     }
+    // Limpiar ScrollTriggers para evitar leaks de memoria
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   }
 
   public getFeaturedProjects(): Project[] {
@@ -105,6 +80,19 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showProjectModal.set(true);
     // Prevenir scroll del body cuando el modal está abierto
     document.body.style.overflow = 'hidden';
+
+    // Animar la entrada del modal
+    setTimeout(() => {
+      gsap.to('.projects-modal-container', {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        startAt: { scale: 0.92, y: 20, opacity: 0 },
+        duration: 0.45,
+        ease: 'back.out(1.2)',
+        clearProps: 'transform' // Limpiar transforms para que la maquetación CSS/Flex retome control
+      });
+    }, 30);
   }
 
   public closeProjectModal(): void {
@@ -227,6 +215,41 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
       return 'grid_view';
     }
     return 'terminal';
+  }
+
+  private initScrollAnimations() {
+    // 1. Animación para los proyectos destacados (featured)
+    gsap.to('.projects-featured-card', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 45, opacity: 0 },
+      stagger: 0.15,
+      duration: 0.75,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '#projects',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // 2. Animación para otros proyectos (other)
+    const otherCards = document.querySelectorAll('.projects-other-card');
+    if (otherCards.length > 0) {
+      gsap.to('.projects-other-card', {
+        opacity: 1,
+        y: 0,
+        startAt: { y: 40, opacity: 0 },
+        stagger: 0.1,
+        duration: 0.65,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.projects-other-card',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
   }
 }
 

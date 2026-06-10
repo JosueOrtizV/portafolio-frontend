@@ -22,11 +22,10 @@
           <div class="flex-grow border-b-2 border-dotted border-outline-variant"></div>
         </div>
 
-        @if (cardsVisible()) {
-          <div @staggerCards class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             @for (project of getFeaturedProjects(); track project.id) {
               <div [class]="(getFeaturedProjects().length > 1 ? ($index % 2 === 0 ? 'lg:col-span-8' : 'lg:col-span-4') : 'lg:col-span-12') + ' md:col-span-12'">
-                <a class="block voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 cursor-pointer group flex flex-col h-full"
+                <a class="projects-featured-card block voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 cursor-pointer group flex flex-col h-full opacity-0"
                    [class.cyan]="$index % 2 === 0"
                    [class.border-primary-container]="$index % 2 === 0"
                    [class.voxel-shadow-cyan]="$index % 2 === 0"
@@ -93,7 +92,6 @@
               </div>
             }
           </div>
-        }
       </section>
     }
 
@@ -107,10 +105,9 @@
           <div class="flex-grow border-b-2 border-dotted border-outline-variant"></div>
         </div>
 
-        @if (cardsVisible()) {
-          <div @staggerCards class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @for (project of getAllProjects(); track project.id) {
-              <div class="voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 flex flex-col h-full"
+              <div class="projects-other-card voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 flex flex-col h-full opacity-0"
                    [class]="getCardClasses($index)">
                 <div class="terminal-header flex items-center justify-between mb-4 border-b border-outline-variant pb-2">
                   <span class="font-label-mono text-[16px] text-on-surface-variant">ID: 0x{{ project.id.toString(16).toUpperCase() }}</span>
@@ -139,7 +136,6 @@
               </div>
             }
           </div>
-        }
       </section>
     }
   } @else {
@@ -155,7 +151,7 @@
          (click)="closeProjectModal()">
       
       <!-- PROJ_INFO.EXE WINDOW -->
-      <div class="modal-container relative w-full max-w-5xl bg-[#0b0016] border-[4px] border-primary-container voxel-shadow-magenta overflow-hidden flex flex-col max-h-[calc(100vh-24px)] md:max-h-[calc(100vh-125px)]"
+      <div class="projects-modal-container relative w-full max-w-5xl bg-[#0b0016] border-[4px] border-primary-container voxel-shadow-magenta overflow-hidden flex flex-col max-h-[calc(100vh-24px)] md:max-h-[calc(100vh-125px)] opacity-0"
            (click)="$event.stopPropagation()">
         
         <!-- WINDOW HEADER -->

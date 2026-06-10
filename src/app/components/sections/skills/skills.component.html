@@ -22,7 +22,7 @@
     <!-- Frontend Card (8-col) -->
     @if (frontendSkills().length > 0) {
     <section
-      class="md:col-span-8 bg-surface-container-low border-2 border-primary-container voxel-shadow-primary p-6 transition-all duration-300">
+      class="skills-card-frontend md:col-span-8 bg-surface-container-low border-2 border-primary-container voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <div class="flex gap-1.5">
           <div class="w-3 h-3 bg-error"></div>
@@ -43,7 +43,7 @@
           </h4>
           <ul class="space-y-3 font-label-mono text-on-surface">
             @for (skill of frontendSkillsFirstHalf(); track skill.id) {
-            <li class="flex items-center gap-3 group hover:text-primary transition-colors duration-200 cursor-default">
+            <li class="skills-frontend-item flex items-center gap-3 group hover:text-primary transition-colors duration-200 cursor-default opacity-0">
               @if (skill.icon) {
               <img [ngSrc]="skill.icon" [alt]="skill.name" width="20" height="20" class="w-5 h-5 flex-shrink-0" />
               } @else {
@@ -62,7 +62,7 @@
           </h4>
           <ul class="space-y-3 font-label-mono text-on-surface">
             @for (skill of frontendSkillsSecondHalf(); track skill.id) {
-            <li class="flex items-center gap-3 group hover:text-primary transition-colors duration-200 cursor-default">
+            <li class="skills-frontend-item flex items-center gap-3 group hover:text-primary transition-colors duration-200 cursor-default opacity-0">
               @if (skill.icon) {
               <img [ngSrc]="skill.icon" [alt]="skill.name" width="20" height="20" class="w-5 h-5 flex-shrink-0" />
               } @else {
@@ -90,7 +90,7 @@
     <!-- Backend & Database Card (4-col) -->
     @if (backendSkills().length > 0 || databaseSkills().length > 0) {
     <section
-      class="md:col-span-4 bg-surface-container-low border-2 border-secondary voxel-shadow-primary p-6 transition-all duration-300">
+      class="skills-card-backend md:col-span-4 bg-surface-container-low border-2 border-secondary voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <div class="flex gap-1.5">
           <div class="w-3 h-3 bg-primary"></div>
@@ -112,7 +112,7 @@
           </h4>
           <div class="flex flex-wrap gap-2">
             @for (skill of backendSkills(); track skill.id) {
-            <span class="px-2 py-1 bg-secondary text-black font-bold font-label-mono text-[11px] uppercase flex items-center gap-1.5 shadow-sm hover:bg-primary-container hover:text-on-primary-fixed hover:scale-105 transition-all duration-200 cursor-default">
+            <span class="skills-backend-item px-2 py-1 bg-secondary text-black font-bold font-label-mono text-[11px] uppercase flex items-center gap-1.5 shadow-sm hover:bg-primary-container hover:text-on-primary-fixed hover:scale-105 transition-all duration-200 cursor-default opacity-0">
               @if (skill.icon) {
                 <img [ngSrc]="skill.icon" [alt]="skill.name" width="16" height="16" class="w-4 h-4 flex-shrink-0" />
               } @else {
@@ -133,7 +133,7 @@
           </h4>
           <ul class="space-y-2 font-label-mono text-on-surface text-[13px]">
             @for (skill of databaseSkills(); track skill.id) {
-            <li class="flex items-center gap-2">
+            <li class="skills-db-item flex items-center gap-2 opacity-0">
               @if (skill.icon) {
                 <img [ngSrc]="skill.icon" [alt]="skill.name" width="16" height="16" class="w-4 h-4 flex-shrink-0" />
               } @else {
@@ -152,7 +152,7 @@
     <!-- Hardware Interface (6-col) -->
     @if (hardSkills().length > 0) {
     <section
-      class="md:col-span-6 bg-surface-container-low border-2 border-primary voxel-shadow-tertiary p-6 transition-all duration-300 group">
+      class="skills-card-hardware md:col-span-6 bg-surface-container-low border-2 border-primary voxel-shadow-tertiary p-6 transition-all duration-300 group opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <h3 class="font-label-mono text-label-mono text-primary flex items-center gap-2 font-bold">
           <span class="material-symbols-outlined text-[20px]">memory</span>
@@ -169,7 +169,7 @@
           <div class="space-y-4">
             @for (skill of hardSkills(); track skill.id) {
             <div
-              class="flex justify-between font-label-mono text-[12px] border-b border-dotted border-outline-variant/30 pb-1 items-center">
+              class="skills-hw-item flex justify-between font-label-mono text-[12px] border-b border-dotted border-outline-variant/30 pb-1 items-center opacity-0">
               <span class="text-primary uppercase flex items-center gap-2">
                 @if (skill.icon) {
                   <img [ngSrc]="skill.icon" [alt]="skill.name" width="16" height="16" class="w-4 h-4 flex-shrink-0" />
@@ -202,7 +202,7 @@
     <!-- Tooling Resources Card (3-col) -->
     @if (toolsSkills().length > 0) {
     <section
-      class="md:col-span-3 bg-surface-container-low border-2 border-outline voxel-shadow-primary p-6 transition-all duration-300">
+      class="skills-card-tooling md:col-span-3 bg-surface-container-low border-2 border-outline voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <h3 class="font-label-mono text-label-mono text-primary flex items-center gap-2 font-bold">
           <span class="material-symbols-outlined text-[18px]">build</span>
@@ -212,7 +212,7 @@
 
       <div class="space-y-4 max-h-[220px] overflow-y-auto pr-1">
         @for (skill of toolsSkills(); track skill.id) {
-        <div class="p-3 border border-outline-variant bg-surface-container-highest flex items-start gap-2.5">
+        <div class="skills-tool-item p-3 border border-outline-variant bg-surface-container-highest flex items-start gap-2.5 opacity-0">
           @if (skill.icon) {
             <img [ngSrc]="skill.icon" [alt]="skill.name" width="20" height="20" class="w-5 h-5 flex-shrink-0 mt-0.5" />
           } @else {
@@ -234,7 +234,7 @@
     <!-- Soft Skills / Neural System Card (3-col) -->
     @if (softSkills().length > 0) {
     <section
-      class="md:col-span-3 bg-surface-container-low border-2 border-outline-variant voxel-shadow-primary p-6 transition-all duration-300">
+      class="skills-card-soft md:col-span-3 bg-surface-container-low border-2 border-outline-variant voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <h3 class="font-label-mono text-label-mono text-primary flex items-center gap-2 font-bold">
           <span class="material-symbols-outlined text-[18px]">psychology</span>
@@ -244,7 +244,7 @@
 
       <div class="space-y-3 font-label-mono text-on-surface text-[12px] max-h-[220px] overflow-y-auto pr-1">
         @for (skill of softSkills(); track skill.id) {
-        <div class="flex items-center gap-2 border-b border-outline-variant/30 pb-1">
+        <div class="skills-soft-item flex items-center gap-2 border-b border-outline-variant/30 pb-1 opacity-0">
           @if (skill.icon) {
             <img [ngSrc]="skill.icon" [alt]="skill.name" width="16" height="16" class="w-4 h-4 flex-shrink-0" />
           } @else {
@@ -261,7 +261,7 @@
 
   <!-- System Diagnostics Terminal -->
   <div
-    class="mt-8 border-2 border-primary-container bg-surface-container-lowest p-0 voxel-shadow-tertiary overflow-hidden">
+    class="skills-terminal mt-8 border-2 border-primary-container bg-surface-container-lowest p-0 voxel-shadow-tertiary overflow-hidden opacity-0">
     <div class="bg-primary-container flex items-center justify-between px-4 py-2">
       <div class="flex items-center gap-3">
         <span class="material-symbols-outlined text-on-primary text-[18px]">terminal</span>

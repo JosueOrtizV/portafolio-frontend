@@ -1,9 +1,13 @@
-import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, computed, effect } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ApiService } from '../../../core/services/api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Skill } from '../../../core/models/portfolio.models';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 @Component({
   selector: 'app-skills',
@@ -17,6 +21,17 @@ export class SkillsComponent implements OnInit, OnDestroy {
   public readonly api = inject(ApiService);
 
   public readonly skills = toSignal(this.api.getSkills(), { initialValue: [] as Skill[] });
+
+  constructor() {
+    effect(() => {
+      const skillsData = this.skills();
+      if (skillsData && skillsData.length > 0) {
+        setTimeout(() => {
+          this.initScrollAnimations();
+        }, 150);
+      }
+    });
+  }
 
   public readonly frontendSkills = computed(() => 
     this.skills().filter(skill => skill.category === 'frontend' && skill.is_active)
@@ -103,6 +118,153 @@ export class SkillsComponent implements OnInit, OnDestroy {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+    // Limpiar ScrollTriggers para evitar leaks de memoria
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+  }
+
+  private initScrollAnimations() {
+    // 1. Frontend card (8-col)
+    gsap.to('.skills-card-frontend', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 35, opacity: 0 },
+      duration: 0.7,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.skills-card-frontend',
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        gsap.to('.skills-frontend-item', {
+          opacity: 1,
+          x: 0,
+          startAt: { x: -10, opacity: 0 },
+          stagger: 0.04,
+          duration: 0.3,
+          ease: 'power1.out'
+        });
+      }
+    });
+
+    // 2. Backend card (4-col)
+    gsap.to('.skills-card-backend', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 35, opacity: 0 },
+      duration: 0.7,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.skills-card-backend',
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        gsap.to('.skills-backend-item', {
+          opacity: 1,
+          scale: 1,
+          startAt: { scale: 0.8, opacity: 0 },
+          stagger: 0.05,
+          duration: 0.3,
+          ease: 'back.out(1.5)'
+        });
+        
+        gsap.to('.skills-db-item', {
+          opacity: 1,
+          x: 0,
+          startAt: { x: -10, opacity: 0 },
+          stagger: 0.06,
+          duration: 0.3,
+          ease: 'power1.out'
+        });
+      }
+    });
+
+    // 3. Hardware card (6-col)
+    gsap.to('.skills-card-hardware', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 35, opacity: 0 },
+      duration: 0.7,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.skills-card-hardware',
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        gsap.to('.skills-hw-item', {
+          opacity: 1,
+          x: 0,
+          startAt: { x: -15, opacity: 0 },
+          stagger: 0.08,
+          duration: 0.35,
+          ease: 'power1.out'
+        });
+      }
+    });
+
+    // 4. Tooling card (3-col)
+    gsap.to('.skills-card-tooling', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 35, opacity: 0 },
+      duration: 0.7,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.skills-card-tooling',
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        gsap.to('.skills-tool-item', {
+          opacity: 1,
+          y: 0,
+          startAt: { y: 10, opacity: 0 },
+          stagger: 0.06,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      }
+    });
+
+    // 5. Soft Card (3-col)
+    gsap.to('.skills-card-soft', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 35, opacity: 0 },
+      duration: 0.7,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.skills-card-soft',
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        gsap.to('.skills-soft-item', {
+          opacity: 1,
+          x: 0,
+          startAt: { x: -10, opacity: 0 },
+          stagger: 0.06,
+          duration: 0.3,
+          ease: 'power1.out'
+        });
+      }
+    });
+
+    // 6. Diagnostics terminal
+    gsap.to('.skills-terminal', {
+      opacity: 1,
+      y: 0,
+      startAt: { y: 40, opacity: 0 },
+      duration: 0.8,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.skills-terminal',
+        start: 'top 90%',
+        toggleActions: 'play none none none'
+      }
+    });
   }
 }
 

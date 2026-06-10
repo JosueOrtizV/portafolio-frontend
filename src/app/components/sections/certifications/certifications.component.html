@@ -10,7 +10,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (cert of certifications(); track cert.id) {
         <!-- Redesigned Cert Card -->
-        <div class="voxel-card bg-surface-container-low p-5 flex flex-col relative group">
+        <div class="certifications-card voxel-card bg-surface-container-low p-5 flex flex-col relative group opacity-0">
           <!-- Auth Badge -->
           <div class="absolute -top-3 right-4 bg-secondary-container text-on-secondary-container px-2 py-0.5 font-label-mono text-[10px] font-bold z-10 border border-primary-container">
             L{{ 9 - ($index % 5) }}_AUTH
@@ -72,7 +72,7 @@
 
     <!-- Visit all certs link -->
     @if (profile()?.certifications_link) {
-      <div class="text-center mt-12">
+      <div class="certifications-button text-center mt-12 opacity-0">
         <a [href]="profile()!.certifications_link!" target="_blank" rel="noopener noreferrer"
            class="inline-flex items-center justify-center bg-primary-container text-on-primary-fixed border-2 border-primary-container font-label-mono px-4 py-3.5 sm:px-8 sm:py-4 min-h-[44px] voxel-shadow-magenta hover:bg-white hover:text-black transition-all active:translate-x-1 active:translate-y-1 uppercase no-underline text-xs sm:text-sm md:text-base">
           <span class="material-symbols-outlined text-[16px] align-middle mr-2">hub</span>
@@ -89,7 +89,7 @@
   }
 
   <!-- Technical Network Visualization Element -->
-  <div class="mt-20 p-4 sm:p-8 border-2 border-dotted border-outline-variant relative overflow-hidden h-64 bg-[#0b0016] flex items-center justify-center voxel-shadow-purple">
+  <div class="certifications-visualization mt-20 p-4 sm:p-8 border-2 border-dotted border-outline-variant relative overflow-hidden h-64 bg-[#0b0016] flex items-center justify-center voxel-shadow-purple opacity-0">
     <div class="absolute inset-0 opacity-20 pointer-events-none">
       <!-- Complex Background Grid/Diagram Simulation -->
       <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">

@@ -12,7 +12,7 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
         <!-- Voxel Window: BIO_MANIFEST.EXE -->
-        <div class="lg:col-span-5 relative">
+        <div class="about-avatar-window lg:col-span-5 relative opacity-0">
           <div class="bg-[#0b0016] border-2 border-primary-container vox-shadow-cyan overflow-hidden relative group">
             <!-- Terminal Bar -->
             <div class="terminal-header h-8 flex items-center justify-between px-3">
@@ -45,7 +45,7 @@
 
         <!-- Profile Data Block -->
         <div class="lg:col-span-7 flex flex-col gap-gutter">
-          <div class="bg-surface-container border-2 border-secondary-container vox-shadow-magenta p-6 md:p-margin-md relative">
+          <div class="about-profile-card bg-surface-container border-2 border-secondary-container vox-shadow-magenta p-6 md:p-margin-md relative opacity-0">
             <div class="absolute -top-4 -right-4 bg-secondary text-background font-bold px-3 py-1 font-label-mono text-label-mono uppercase shadow-md">
               {{ i18n.language() === 'es' ? 'PERFIL_ACTIVO' : 'PROFILE_LOCKED' }}
             </div>
@@ -58,7 +58,7 @@
             <div class="space-y-4 border-l-2 border-dotted border-outline-variant pl-4 md:pl-6">
               <ul class="space-y-4 font-label-mono text-sm md:text-[15px] text-on-surface-variant/80">
                 @for (sentence of getBioSentences(profileData); track $index) {
-                  <li class="flex items-start gap-3">
+                  <li class="about-bio-item flex items-start gap-3 opacity-0">
                     <span class="text-primary-container font-bold select-none animate-pulse">&gt;</span>
                     <span>{{ sentence }}</span>
                   </li>
@@ -69,7 +69,7 @@
             @if (profileData.highlights && profileData.highlights.length > 0) {
               <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                 @for (highlight of profileData.highlights; track $index) {
-                  <div class="flex items-center gap-3 p-3 bg-surface-container-low border border-outline-variant">
+                  <div class="about-highlight-item flex items-center gap-3 p-3 bg-surface-container-low border border-outline-variant opacity-0">
                     <div class="w-4 h-4 bg-primary-container"></div>
                     <span class="font-label-mono text-label-mono uppercase">
                       {{ i18n.getText(highlight.text_es, highlight.text_en) }}
@@ -82,7 +82,7 @@
 
           <!-- Contact & Logs -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            <div class="bg-surface-container-highest border-2 border-primary shadow-[4px_4px_0_0_#ffffff] p-6 glow-hover transition-all">
+            <div class="about-contact-card bg-surface-container-highest border-2 border-primary shadow-[4px_4px_0_0_#ffffff] p-6 glow-hover transition-all opacity-0">
               <h4 class="font-label-mono text-label-mono text-primary uppercase mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-[18px]">contact_mail</span>
                 {{ i18n.language() === 'es' ? 'CANALES_DE_COMUNICACION' : 'COMMUNICATION_CHANNELS' }}
@@ -131,7 +131,7 @@
               </ul>
             </div>
 
-            <div class="bg-[#000] border-2 border-outline-variant p-6 relative overflow-hidden h-full min-h-[180px]">
+            <div class="about-logs-card bg-[#000] border-2 border-outline-variant p-6 relative overflow-hidden h-full min-h-[180px] opacity-0">
               <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#00f3ff_1px,transparent_1px)] [background-size:10px_10px]"></div>
               <h4 class="font-label-mono text-label-mono text-on-surface-variant uppercase mb-4">CORE_LOGS</h4>
               <div class="font-label-mono text-[10px] text-outline space-y-1">

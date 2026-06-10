@@ -16,7 +16,7 @@
       
       <!-- Left: COMMUNICATION_CHANNELS -->
       <div class="lg:col-span-5 flex flex-col gap-margin-sm">
-        <div class="bg-[#0b0016] border-2 border-primary-container p-6 relative voxel-shadow-magenta-lg">
+        <div class="contact-channels-card bg-[#0b0016] border-2 border-primary-container p-6 relative voxel-shadow-magenta-lg opacity-0">
           <div class="flex justify-between items-center mb-6 dotted-border-bottom pb-4">
             <h3 class="font-label-mono text-label-mono text-secondary uppercase">
               {{ i18n.language() === 'es' ? 'CANALES_COMUNICACION' : 'COMMUNICATION_CHANNELS' }}
@@ -103,7 +103,7 @@
         </div>
 
         <!-- Technical Data Card (Secondary) -->
-        <div class="bg-surface-container border-2 border-outline-variant p-4 font-label-mono text-[12px] text-on-surface-variant flex flex-col gap-2">
+        <div class="contact-latency-bar bg-surface-container border-2 border-outline-variant p-4 font-label-mono text-[12px] text-on-surface-variant flex flex-col gap-2 opacity-0">
           <div class="flex items-center gap-2">
             <div class="w-2 h-2 bg-secondary animate-pulse"></div>
             <span>NETWORK_HEALTH: 99.8%</span>
@@ -116,7 +116,7 @@
 
       <!-- Right: MESSAGE_UPLINK Form -->
       <div class="lg:col-span-7">
-        <div class="bg-surface-container-low border-2 border-primary-container p-6 voxel-shadow-magenta-lg relative overflow-hidden">
+        <div class="contact-form-card bg-surface-container-low border-2 border-primary-container p-6 voxel-shadow-magenta-lg relative overflow-hidden opacity-0">
           
           <!-- Terminal Header Decor -->
           <div class="absolute top-0 left-0 w-full h-8 bg-surface-container-high border-b-2 border-primary-container flex items-center px-4 gap-2">
