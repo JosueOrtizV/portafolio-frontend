@@ -1,132 +1,221 @@
-<section id="contact" class="py-12 md:py-20 px-4">
-  <div class="container mx-auto max-w-4xl">
-    <h2
-      class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      {{ i18n.sections.contact() }}
-    </h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Contact Info -->
-      @if (profile(); as profileData) {
-      <div class="bento-card space-y-6">
-        <div>
-          <h3 class="text-2xl font-bold mb-4">
-            {{ i18n.language() === 'es' ? 'Información de Contacto' : 'Contact Information' }}
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-envelope text-blue-400"></i>
-              <a [href]="'mailto:' + profileData.email" class="text-gray-300 hover:text-blue-400 transition-colors">
-                {{ profileData.email }}
-              </a>
-            </div>
-            @if (profileData.social_networks.phone) {
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-phone text-blue-400"></i>
-              <a [href]="'tel:' + profileData.social_networks.phone"
-                class="text-gray-300 hover:text-blue-400 transition-colors">
-                {{ profileData.social_networks.phone }}
-              </a>
-            </div>
-            }
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-map-marker-alt text-blue-400"></i>
-              <span class="text-gray-300">{{ profileData.location }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Social Links -->
-        <div>
-          <h4 class="text-lg font-bold mb-3">
-            {{ i18n.language() === 'es' ? 'Redes Sociales' : 'Social Networks' }}
-          </h4>
-          <div class="flex space-x-4">
-            @if (profileData.social_networks.linkedin) {
-            <a [href]="profileData.social_networks.linkedin" target="_blank" rel="noopener noreferrer"
-              class="text-blue-400 hover:text-blue-300 transition-colors no-underline" aria-label="LinkedIn">
-              <i class="fab fa-linkedin text-2xl"></i>
-            </a>
-            }
-            @if (profileData.social_networks.github) {
-            <a [href]="profileData.social_networks.github" target="_blank" rel="noopener noreferrer"
-              class="text-blue-400 hover:text-blue-300 transition-colors no-underline" aria-label="GitHub">
-              <i class="fab fa-github text-2xl"></i>
-            </a>
-            }
-            @if (profileData.social_networks.whatsapp) {
-            <a [href]="profileData.social_networks.whatsapp" target="_blank" rel="noopener noreferrer"
-              class="text-green-400 hover:text-green-300 transition-colors no-underline" aria-label="WhatsApp">
-              <i class="fab fa-whatsapp text-2xl"></i>
-            </a>
-            }
-          </div>
-        </div>
-      </div>
-      }
-
-      <!-- Contact Form -->
-      <div class="bento-card">
-        <h3 class="text-2xl font-bold mb-6">
-          {{ i18n.language() === 'es' ? 'Enviar Mensaje' : 'Send Message' }}
-        </h3>
-
-        @if (submitSuccess()) {
-        <div class="bg-green-500/20 border border-green-500/50 rounded-lg p-4 mb-4">
-          <p class="text-green-400">
-            {{ i18n.language() === 'es' ? '¡Mensaje enviado exitosamente!' : 'Message sent successfully!' }}
-          </p>
-        </div>
-        }
-
-        @if (submitError(); as error) {
-        <div class="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-4">
-          <p class="text-red-400">{{ error }}</p>
-        </div>
-        }
-
-        <form (ngSubmit)="onSubmit()" class="space-y-4">
-          <div>
-            <label for="name" class="block text-sm font-medium mb-2">
-              {{ i18n.language() === 'es' ? 'Nombre' : 'Name' }}
-            </label>
-            <input id="name" type="text" [(ngModel)]="formData().name" [name]="'name'" required
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-
-          <div>
-            <label for="email" class="block text-sm font-medium mb-2">Email</label>
-            <input id="email" type="email" [(ngModel)]="formData().email" [name]="'email'" required
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-
-          <div>
-            <label for="subject" class="block text-sm font-medium mb-2">
-              {{ i18n.language() === 'es' ? 'Asunto' : 'Subject' }} ({{ i18n.language() === 'es' ? 'Opcional' :
-              'Optional' }})
-            </label>
-            <input id="subject" type="text" [(ngModel)]="formData().subject" [name]="'subject'"
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-
-          <div>
-            <label for="message" class="block text-sm font-medium mb-2">
-              {{ i18n.language() === 'es' ? 'Mensaje' : 'Message' }}
-            </label>
-            <textarea id="message" [(ngModel)]="formData().message" [name]="'message'" required rows="5"
-              class="w-full glass px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
-          </div>
-
-          <button type="submit" [disabled]="isSubmitting()"
-            class="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-            @if (isSubmitting()) {
-            {{ i18n.language() === 'es' ? 'Enviando...' : 'Sending...' }}
-            } @else {
-            {{ i18n.language() === 'es' ? 'Enviar Mensaje' : 'Send Message' }}
-            }
-          </button>
-        </form>
-      </div>
+<section id="contact" class="py-12 md:py-20 px-4 relative z-10 max-w-7xl mx-auto">
+  <!-- Header Section -->
+  <header class="mb-margin-md flex flex-col items-start">
+    <div class="flex items-center gap-4 mb-4">
+      <span class="w-10 h-10 bg-primary-container inline-block shadow-[4px_4px_0px_0px_#fe00fe]"></span>
+      <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container uppercase drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] tracking-tighter crt-flicker">
+        {{ i18n.sections.contact() }}<span class="terminal-cursor"></span>
+      </h2>
     </div>
-  </div>
-</section>
+    <div class="w-24 h-2 bg-secondary-container voxel-shadow-magenta"></div>
+  </header>
+
+  @if (profile(); as profileData) {
+    <!-- Main Console Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-margin-md">
+      
+      <!-- Left: COMMUNICATION_CHANNELS -->
+      <div class="lg:col-span-5 flex flex-col gap-margin-sm">
+        <div class="bg-[#0b0016] border-2 border-primary-container p-6 relative voxel-shadow-magenta-lg">
+          <div class="flex justify-between items-center mb-6 dotted-border-bottom pb-4">
+            <h3 class="font-label-mono text-label-mono text-secondary uppercase">
+              {{ i18n.language() === 'es' ? 'CANALES_COMUNICACION' : 'COMMUNICATION_CHANNELS' }}
+            </h3>
+            <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">sensors</span>
+          </div>
+
+          <div class="space-y-6">
+            <!-- Channel: Email -->
+            <div class="group cursor-pointer">
+              <div class="font-label-mono text-[10px] text-on-surface-variant mb-1 uppercase">{{ i18n.language() === 'es' ? 'ENLACE_DIRECTO' : 'DIRECT_LINK' }}</div>
+              <div class="flex items-center gap-4 text-primary group-hover:text-secondary-fixed-dim transition-colors">
+                <span class="bg-secondary-container p-2 text-white flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[18px]">alternate_email</span>
+                </span>
+                <a [href]="'mailto:' + profileData.email" class="font-label-mono text-body-md hover:underline break-all uppercase">
+                  {{ profileData.email }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Channel: Phone (if available) -->
+            @if (profileData.social_networks.phone) {
+              <div class="group cursor-pointer">
+                <div class="font-label-mono text-[10px] text-on-surface-variant mb-1 uppercase">{{ i18n.language() === 'es' ? 'LLAMADA_DIRECTA' : 'DIRECT_CALL' }}</div>
+                <div class="flex items-center gap-4 text-primary group-hover:text-secondary-fixed-dim transition-colors">
+                  <span class="bg-secondary-container p-2 text-white flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[18px]">phone</span>
+                  </span>
+                  <a [href]="'tel:' + profileData.social_networks.phone" class="font-label-mono text-body-md hover:underline">
+                    {{ profileData.social_networks.phone }}
+                  </a>
+                </div>
+              </div>
+            }
+
+            <!-- Channel: Location -->
+            <div class="group">
+              <div class="font-label-mono text-[10px] text-on-surface-variant mb-1 uppercase">{{ i18n.language() === 'es' ? 'UBICACION_NODO' : 'NODE_LOCATION' }}</div>
+              <div class="flex items-center gap-4 text-primary">
+                <span class="bg-secondary-container p-2 text-white flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[18px]">location_on</span>
+                </span>
+                <span class="font-label-mono text-body-md uppercase">{{ profileData.location }}</span>
+              </div>
+            </div>
+
+            <!-- Channel: Socials -->
+            <div>
+              <div class="font-label-mono text-[10px] text-on-surface-variant mb-4 uppercase">{{ i18n.language() === 'es' ? 'ENLACES_SOCIALES' : 'SOCIAL_UPLINKS' }}</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                @if (profileData.social_networks.github) {
+                  <a [href]="profileData.social_networks.github" target="_blank" rel="noopener noreferrer"
+                     class="border-2 border-outline-variant p-2 md:p-4 font-label-mono text-[10px] sm:text-xs md:text-label-mono text-center hover:border-secondary hover:text-secondary transition-all active:scale-95 no-underline block truncate">
+                    GITHUB.BIN
+                  </a>
+                }
+                @if (profileData.social_networks.linkedin) {
+                  <a [href]="profileData.social_networks.linkedin" target="_blank" rel="noopener noreferrer"
+                     class="border-2 border-outline-variant p-2 md:p-4 font-label-mono text-[10px] sm:text-xs md:text-label-mono text-center hover:border-secondary hover:text-secondary transition-all active:scale-95 no-underline block truncate">
+                    LINKEDIN.OS
+                  </a>
+                }
+                @if (profileData.social_networks.whatsapp) {
+                  <a [href]="profileData.social_networks.whatsapp" target="_blank" rel="noopener noreferrer"
+                     class="border-2 border-outline-variant p-2 md:p-4 font-label-mono text-[10px] sm:text-xs md:text-label-mono text-center hover:border-secondary hover:text-secondary transition-all active:scale-95 no-underline block truncate">
+                    WHATSAPP.NET
+                  </a>
+                }
+                <a href="#" (click)="$event.preventDefault()" class="border-2 border-outline-variant p-2 md:p-4 font-label-mono text-[10px] sm:text-xs md:text-label-mono text-center opacity-30 cursor-not-allowed no-underline block truncate">
+                  SECURE_COMMS
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Decorative Bit -->
+          <div class="mt-8 pt-4 dotted-border-bottom opacity-50">
+            <div class="flex justify-between font-label-mono text-[10px] text-on-surface-variant">
+              <span>LATENCY: 14MS</span>
+              <span>ENCRYPTION: AES-256</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Data Card (Secondary) -->
+        <div class="bg-surface-container border-2 border-outline-variant p-4 font-label-mono text-[12px] text-on-surface-variant flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-secondary animate-pulse"></div>
+            <span>NETWORK_HEALTH: 99.8%</span>
+          </div>
+          <div class="overflow-hidden whitespace-nowrap opacity-40 text-[10px] tracking-tight">
+            01001010 01001111 01010011 01010101 01000101 01011111 01001111 01010010 01010100 01001001 01011010
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: MESSAGE_UPLINK Form -->
+      <div class="lg:col-span-7">
+        <div class="bg-surface-container-low border-2 border-primary-container p-6 voxel-shadow-magenta-lg relative overflow-hidden">
+          
+          <!-- Terminal Header Decor -->
+          <div class="absolute top-0 left-0 w-full h-8 bg-surface-container-high border-b-2 border-primary-container flex items-center px-4 gap-2">
+            <div class="w-3 h-3 bg-error-container border border-error"></div>
+            <div class="w-3 h-3 bg-secondary-container border border-secondary"></div>
+            <div class="w-3 h-3 bg-primary-container border border-primary"></div>
+            <div class="ml-4 font-label-mono text-[10px] text-on-surface-variant">UPLINK_TERMINAL_V1.0.4</div>
+          </div>
+
+          <div class="mt-8">
+            <div class="mb-8">
+              <h3 class="font-headline-md text-[24px] text-primary-container uppercase">
+                {{ i18n.language() === 'es' ? 'ENVIAR_PAQUETE' : 'MESSAGE_UPLINK' }}
+              </h3>
+              <p class="font-body-md text-on-surface-variant italic">
+                {{ i18n.language() === 'es' ? 'Transmite tu paquete de datos al mainframe central.' : 'Broadcast your packet to the central mainframe.' }}
+              </p>
+            </div>
+
+            @if (submitSuccess()) {
+              <div class="bg-green-500/20 border border-green-500/50 p-4 mb-6 font-label-mono text-[14px] text-green-400">
+                <span class="flex items-center gap-2">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>{{ i18n.language() === 'es' ? '¡PAQUETE ENVIADO EXITOSAMENTE!' : 'PACKET SENT SUCCESSFULLY!' }}</span>
+                </span>
+              </div>
+            }
+
+            @if (submitError(); as error) {
+              <div class="bg-red-500/20 border border-red-500/50 p-4 mb-6 font-label-mono text-[14px] text-red-400">
+                <span class="flex items-center gap-2">
+                  <span class="material-symbols-outlined">error</span>
+                  <span>{{ error | uppercase }}</span>
+                </span>
+              </div>
+            }
+
+            <form (ngSubmit)="onSubmit()" class="space-y-6">
+              <!-- Name Field -->
+              <div class="space-y-2">
+                <label for="name" class="font-label-mono text-label-mono text-secondary uppercase block">&gt; {{ i18n.language() === 'es' ? 'IDENTIDAD' : 'IDENTITY' }}</label>
+                <input id="name" name="name" [(ngModel)]="formData().name" required
+                       class="w-full bg-[#0d1515] border-2 border-outline-variant text-primary-container font-label-mono p-4 focus:outline-none focus:border-primary-fixed-dim transition-colors placeholder:opacity-30 uppercase" 
+                       placeholder="{{ i18n.language() === 'es' ? 'INGRESAR_NOMBRE...' : 'ENTER_NAME...' }}" type="text"/>
+              </div>
+
+              <!-- Email Field -->
+              <div class="space-y-2">
+                <label for="email" class="font-label-mono text-label-mono text-secondary uppercase block">&gt; {{ i18n.language() === 'es' ? 'DIR_RETORNO' : 'RETURN_ADR' }}</label>
+                <input id="email" name="email" [(ngModel)]="formData().email" required
+                       class="w-full bg-[#0d1515] border-2 border-outline-variant text-primary-container font-label-mono p-4 focus:outline-none focus:border-primary-fixed-dim transition-colors placeholder:opacity-30 uppercase" 
+                       placeholder="{{ i18n.language() === 'es' ? 'INGRESAR_CORREO...' : 'ENTER_EMAIL...' }}" type="email"/>
+              </div>
+
+              <!-- Subject Field -->
+              <div class="space-y-2">
+                <label for="subject" class="font-label-mono text-label-mono text-secondary uppercase block">&gt; {{ i18n.language() === 'es' ? 'PROTOCOLO' : 'PROTOCOL' }}</label>
+                <select id="subject" name="subject" [(ngModel)]="formData().subject"
+                        class="w-full bg-[#0d1515] border-2 border-outline-variant text-primary-container font-label-mono p-4 focus:outline-none focus:border-primary-fixed-dim transition-colors appearance-none uppercase">
+                  <option value="" disabled selected>{{ i18n.language() === 'es' ? 'SELECCIONAR_PROTOCOLO...' : 'SELECT_PROTOCOL...' }}</option>
+                  <option value="GENERAL_QUERY">{{ i18n.language() === 'es' ? 'CONSULTA_GENERAL' : 'GENERAL_QUERY' }}</option>
+                  <option value="PROJECT_PROPOSAL">{{ i18n.language() === 'es' ? 'PROPUESTA_PROYECTO' : 'PROJECT_PROPOSAL' }}</option>
+                  <option value="TECHNICAL_SUPPORT">{{ i18n.language() === 'es' ? 'SOPORTE_TECNICO' : 'TECHNICAL_SUPPORT' }}</option>
+                  <option value="URGENT_UPLINK">{{ i18n.language() === 'es' ? 'ENLACE_URGENTE' : 'URGENT_UPLINK' }}</option>
+                </select>
+              </div>
+
+              <!-- Message Field -->
+              <div class="space-y-2">
+                <label for="message" class="font-label-mono text-label-mono text-secondary uppercase block">&gt; {{ i18n.language() === 'es' ? 'DATOS_PAQUETE' : 'PAYLOAD_DATA' }}</label>
+                <textarea id="message" name="message" [(ngModel)]="formData().message" required rows="4"
+                          class="w-full bg-[#0d1515] border-2 border-outline-variant text-primary-container font-label-mono p-4 focus:outline-none focus:border-primary-fixed-dim transition-colors placeholder:opacity-30 uppercase resize-none" 
+                          placeholder="{{ i18n.language() === 'es' ? 'INICIAR_SECUENCIA_MENSAJE...' : 'INITIATE_MESSAGE_SEQUENCE...' }}"></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-4">
+                <button [disabled]="isSubmitting()"
+                        class="group relative w-full bg-primary-container text-on-primary-container font-headline-md text-[20px] py-4 border-2 border-primary-container voxel-shadow-magenta glow-cyan transition-all active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
+                        type="submit">
+                  <span class="flex items-center justify-center gap-3">
+                    @if (isSubmitting()) {
+                      <span class="material-symbols-outlined animate-spin font-bold">sync</span>
+                      <span>{{ i18n.language() === 'es' ? 'ENVIANDO...' : 'SENDING...' }}</span>
+                    } @else {
+                      <span class="material-symbols-outlined font-bold">send</span>
+                      <span>{{ i18n.language() === 'es' ? 'ENVIAR_PAQUETE' : 'SEND_PACKET' }}</span>
+                    }
+                  </span>
+                </button>
+                <div class="mt-3 text-center font-label-mono text-[11px] text-on-surface-variant/70 uppercase tracking-wider">
+                  {{ i18n.language() === 'es' ? '// TIEMPO ESTIMADO DE RESPUESTA: < 24 HORAS' : '// ESTIMATED RESPONSE TIME: < 24 HOURS' }}
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+</section>

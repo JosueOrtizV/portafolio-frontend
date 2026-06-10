@@ -1,107 +1,154 @@
 <section id="about" class="py-12 md:py-20 px-4">
   <div class="container mx-auto max-w-6xl">
-    <h2
-      class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      {{ i18n.sections.about() }}
-    </h2>
-
     @if (profile(); as profileData) {
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Photo Card -->
-      @if (profileData.photo) {
-      <div class="bento-card flex items-center justify-center">
-        <img [ngSrc]="profileData.photo" [alt]="profileData.full_name" width="800" height="800" [priority]="true"
-          class="w-full h-auto rounded-xl object-cover" />
+      <div class="mb-6 md:mb-margin-md flex flex-col sm:flex-row justify-between items-start sm:items-end border-b-2 border-primary-fixed pb-2 gap-2 sm:gap-0">
+        <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container uppercase drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] tracking-tighter crt-flicker">
+          {{ i18n.sections.about() | uppercase }}_OS_v1.0
+        </h2>
+        <div class="font-label-mono text-label-mono text-secondary-fixed">
+          LOC: {{ profileData.location | uppercase }}
+        </div>
       </div>
-      }
 
-      <!-- Bio Card -->
-      <div class="bento-card space-y-4">
-        <div>
-          <h3 class="text-2xl font-bold mb-2">{{ profileData.full_name }}</h3>
-          <p class="text-blue-400 text-lg mb-4">
-            {{ i18n.getText(profileData.profession, profileData.profession_en) }}
-          </p>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <!-- Voxel Window: BIO_MANIFEST.EXE -->
+        <div class="lg:col-span-5 relative">
+          <div class="bg-[#0b0016] border-2 border-primary-container vox-shadow-cyan overflow-hidden relative group">
+            <!-- Terminal Bar -->
+            <div class="terminal-header h-8 flex items-center justify-between px-3">
+              <span class="font-label-mono text-[10px] text-on-primary-fixed font-bold">BIO_MANIFEST.EXE</span>
+              <div class="flex gap-1">
+                <div class="w-3 h-3 bg-on-primary-fixed opacity-50"></div>
+                <div class="w-3 h-3 bg-on-primary-fixed opacity-50"></div>
+                <div class="w-3 h-3 bg-on-primary-fixed"></div>
+              </div>
+            </div>
+            <!-- Image Container with Diagnostic Frame -->
+            <div class="p-4 relative">
+              <div class="absolute inset-4 border-2 border-primary-container/20 pointer-events-none"></div>
+              <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-secondary-container"></div>
+              <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-secondary-container"></div>
+              <!-- Scanner Effect -->
+              <div class="diagnostic-line absolute left-0 right-0 z-10 opacity-50"></div>
+              @if (profileData.photo) {
+                <img [ngSrc]="profileData.photo" width="800" height="800" [priority]="true" [alt]="profileData.full_name"
+                  class="w-full h-auto object-cover filter grayscale-0 hover:grayscale transition-all duration-700" />
+              }
+              <!-- Status Overlays -->
+              <div class="absolute bottom-6 left-6 bg-surface/90 border border-primary-container p-2 font-label-mono text-[10px] text-primary-container">
+                SYSTEM_HEALTH: OPTIMAL<br/>
+                ARCH_TYPE: MECH_DEV_01
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Full Biography -->
-        <div class="space-y-3 text-gray-300 leading-relaxed">
-          <p class="whitespace-pre-line">{{ i18n.getText(profileData.biography, profileData.biography_en) }}</p>
-        </div>
-
-        <!-- Additional Info Section -->
-        @if (profileData.highlights && profileData.highlights.length > 0) {
-        <div class="pt-4 border-t border-white/10">
-          <h4 class="text-lg font-semibold mb-3 text-gray-200">
-            {{ i18n.language() === 'es' ? 'Sobre mí' : 'About me' }}
-          </h4>
-          <ul class="space-y-2 text-gray-300 text-sm">
-            @for (highlight of profileData.highlights; track $index) {
-            <li class="flex items-start">
-              <i class="fas fa-check-circle text-blue-400 mr-2 mt-1 flex-shrink-0"></i>
-              <span>{{ i18n.getText(highlight.text_es, highlight.text_en) }}</span>
-            </li>
+        <!-- Profile Data Block -->
+        <div class="lg:col-span-7 flex flex-col gap-gutter">
+          <div class="bg-surface-container border-2 border-secondary-container vox-shadow-magenta p-6 md:p-margin-md relative">
+            <div class="absolute -top-4 -right-4 bg-secondary text-background font-bold px-3 py-1 font-label-mono text-label-mono uppercase shadow-md">
+              {{ i18n.language() === 'es' ? 'PERFIL_ACTIVO' : 'PROFILE_LOCKED' }}
+            </div>
+            <div class="mb-6">
+              <h3 class="font-headline-md text-headline-md text-primary tracking-tight">{{ profileData.full_name }}</h3>
+              <p class="font-label-mono text-label-mono text-primary-container uppercase mt-1">
+                {{ i18n.getText(profileData.profession, profileData.profession_en) }}
+              </p>
+            </div>
+            <div class="space-y-4 border-l-2 border-dotted border-outline-variant pl-4 md:pl-6">
+              <ul class="space-y-4 font-label-mono text-sm md:text-[15px] text-on-surface-variant/80">
+                @for (sentence of getBioSentences(profileData); track $index) {
+                  <li class="flex items-start gap-3">
+                    <span class="text-primary-container font-bold select-none animate-pulse">&gt;</span>
+                    <span>{{ sentence }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+            <!-- Quick Facts Grid -->
+            @if (profileData.highlights && profileData.highlights.length > 0) {
+              <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                @for (highlight of profileData.highlights; track $index) {
+                  <div class="flex items-center gap-3 p-3 bg-surface-container-low border border-outline-variant">
+                    <div class="w-4 h-4 bg-primary-container"></div>
+                    <span class="font-label-mono text-label-mono uppercase">
+                      {{ i18n.getText(highlight.text_es, highlight.text_en) }}
+                    </span>
+                  </div>
+                }
+              </div>
             }
-          </ul>
-        </div>
-        }
-
-        <!-- Contact Info -->
-        <div class="pt-4 border-t border-white/10 space-y-3">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-envelope text-blue-400"></i>
-            <a [href]="'mailto:' + profileData.email" class="text-blue-400 hover:text-blue-300 font-medium">
-              {{ profileData.email }}
-            </a>
-          </div>
-          @if (profileData.social_networks.phone) {
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-phone text-blue-400"></i>
-            <a [href]="'tel:' + profileData.social_networks.phone"
-              class="text-blue-400 hover:text-blue-300 font-medium">
-              {{ profileData.social_networks.phone }}
-            </a>
-          </div>
-          }
-          <div class="flex items-center space-x-2 text-gray-400">
-            <i class="fas fa-map-marker-alt text-blue-400"></i>
-            <span>{{ profileData.location }}</span>
           </div>
 
-          <!-- Social Networks -->
-          <div class="pt-2">
-            <p class="text-sm text-gray-500 mb-2">
-              {{ i18n.language() === 'es' ? 'Redes Sociales' : 'Social Networks' }}
-            </p>
-            <div class="flex items-center space-x-4">
-              @if (profileData.social_networks.linkedin) {
-              <a [href]="profileData.social_networks.linkedin" target="_blank" rel="noopener noreferrer"
-                class="text-blue-400 hover:text-blue-300 transition-colors no-underline" aria-label="LinkedIn">
-                <i class="fab fa-linkedin text-2xl"></i>
-              </a>
-              }
-              @if (profileData.social_networks.github) {
-              <a [href]="profileData.social_networks.github" target="_blank" rel="noopener noreferrer"
-                class="text-blue-400 hover:text-blue-300 transition-colors no-underline" aria-label="GitHub">
-                <i class="fab fa-github text-2xl"></i>
-              </a>
-              }
-              @if (profileData.social_networks.whatsapp) {
-              <a [href]="profileData.social_networks.whatsapp" target="_blank" rel="noopener noreferrer"
-                class="text-green-400 hover:text-green-300 transition-colors no-underline" aria-label="WhatsApp">
-                <i class="fab fa-whatsapp text-2xl"></i>
-              </a>
-              }
+          <!-- Contact & Logs -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+            <div class="bg-surface-container-highest border-2 border-primary shadow-[4px_4px_0_0_#ffffff] p-6 glow-hover transition-all">
+              <h4 class="font-label-mono text-label-mono text-primary uppercase mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">contact_mail</span>
+                {{ i18n.language() === 'es' ? 'CANALES_DE_COMUNICACION' : 'COMMUNICATION_CHANNELS' }}
+              </h4>
+              <ul class="space-y-3 font-label-mono text-[12px]">
+                <li class="flex items-center gap-2">
+                  <span class="text-secondary-fixed">MAIL:</span>
+                  <a class="hover:text-primary-container transition-colors no-underline" [href]="'mailto:' + profileData.email">
+                    {{ profileData.email }}
+                  </a>
+                </li>
+                @if (profileData.social_networks.phone) {
+                  <li class="flex items-center gap-2">
+                    <span class="text-secondary-fixed">TEL:</span>
+                    <a class="hover:text-primary-container transition-colors no-underline" [href]="'tel:' + profileData.social_networks.phone">
+                      {{ profileData.social_networks.phone }}
+                    </a>
+                  </li>
+                }
+                <li class="flex items-center gap-2">
+                  <span class="text-secondary-fixed">LOC:</span> {{ profileData.location }}
+                </li>
+                <li class="flex items-center gap-2 mt-4">
+                  <span class="material-symbols-outlined text-[16px] text-primary-container">share</span>
+                  <div class="flex gap-3">
+                    @if (profileData.social_networks.linkedin) {
+                      <a [href]="profileData.social_networks.linkedin" target="_blank" rel="noopener noreferrer"
+                        class="w-6 h-6 bg-secondary transition-transform hover:-translate-y-1 cursor-pointer flex items-center justify-center text-on-secondary" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin text-sm"></i>
+                      </a>
+                    }
+                    @if (profileData.social_networks.github) {
+                      <a [href]="profileData.social_networks.github" target="_blank" rel="noopener noreferrer"
+                        class="w-6 h-6 bg-primary-container transition-transform hover:-translate-y-1 cursor-pointer flex items-center justify-center text-on-primary-container" aria-label="GitHub">
+                        <i class="fab fa-github text-sm"></i>
+                      </a>
+                    }
+                    @if (profileData.social_networks.whatsapp) {
+                      <a [href]="profileData.social_networks.whatsapp" target="_blank" rel="noopener noreferrer"
+                        class="w-6 h-6 bg-surface-variant transition-transform hover:-translate-y-1 cursor-pointer border border-outline flex items-center justify-center text-on-surface" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp text-sm"></i>
+                      </a>
+                    }
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-[#000] border-2 border-outline-variant p-6 relative overflow-hidden h-full min-h-[180px]">
+              <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#00f3ff_1px,transparent_1px)] [background-size:10px_10px]"></div>
+              <h4 class="font-label-mono text-label-mono text-on-surface-variant uppercase mb-4">CORE_LOGS</h4>
+              <div class="font-label-mono text-[10px] text-outline space-y-1">
+                @for (log of logs(); track log) {
+                  <div>{{ log }}</div>
+                }
+                <div class="text-primary-container animate-pulse">&gt; WAITING_FOR_INPUT_</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     } @else {
-    <div class="text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-      <p class="mt-4 text-gray-400">Loading...</p>
-    </div>
+      <div class="text-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-container mx-auto"></div>
+        <p class="mt-4 text-primary-container font-label-mono text-label-mono uppercase animate-pulse">LOADING_PROFILE_DATA...</p>
+      </div>
     }
   </div>
 </section>

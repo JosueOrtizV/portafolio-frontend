@@ -1,56 +1,116 @@
-<section id="certifications" class="py-12 md:py-20 px-4">
-  <div class="container mx-auto max-w-6xl">
-    <h2
-      class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+<section id="certifications" class="py-12 md:py-20 px-4 relative z-10 max-w-6xl mx-auto">
+  <div class="flex items-center gap-4 mb-8">
+    <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container uppercase drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] tracking-tighter crt-flicker">
       {{ i18n.sections.certifications() }}
     </h2>
+    <div class="h-[2px] flex-grow border-b-2 border-dotted border-outline-variant"></div>
+  </div>
 
-    @if (certifications().length > 0) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+  @if (certifications().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (cert of certifications(); track cert.id) {
-      <div class="bento-card">
-        @if (cert.image) {
-        <div class="mb-4 rounded-lg overflow-hidden">
-          <img [ngSrc]="cert.image" [alt]="i18n.getText(cert.title, cert.title_en)" width="600" height="450"
-            class="w-full h-auto object-cover" />
+        <!-- Redesigned Cert Card -->
+        <div class="voxel-card bg-surface-container-low p-5 flex flex-col relative group">
+          <!-- Auth Badge -->
+          <div class="absolute -top-3 right-4 bg-secondary-container text-on-secondary-container px-2 py-0.5 font-label-mono text-[10px] font-bold z-10 border border-primary-container">
+            L{{ 9 - ($index % 5) }}_AUTH
+          </div>
+
+          <!-- Auth Status Header inside card -->
+          <div class="flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-primary-container text-lg">verified_user</span>
+            <span class="font-label-mono text-[10px] text-on-surface-variant uppercase tracking-widest">
+              {{ i18n.language() === 'es' ? 'Estado_Aut: Verificado' : 'Auth_Status: Verified' }}
+            </span>
+          </div>
+
+          <!-- Card Image Wrapper -->
+          @if (cert.image) {
+            <div class="border-2 border-outline-variant bg-surface-container-highest aspect-[4/3] mb-4 overflow-hidden relative">
+              <img [ngSrc]="cert.image" [alt]="i18n.getText(cert.title, cert.title_en)" width="300" height="170" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+            </div>
+          }
+
+          <!-- Title & Organization -->
+          <div class="flex-grow">
+            <h3 class="font-label-mono font-bold text-primary-container text-sm leading-tight uppercase mb-1">
+              {{ i18n.getText(cert.title, cert.title_en) }}
+            </h3>
+            <p class="font-body-md text-xs text-on-surface-variant mb-4">
+              {{ cert.issuing_organization }}
+              @if (cert.issue_date) {
+                | {{ formatDate(cert.issue_date) }}
+              }
+            </p>
+          </div>
+
+          <!-- Integrity & Status Footer -->
+          <div class="mt-auto">
+            <div class="flex justify-between items-end mb-2">
+              <span class="font-label-mono text-[9px] text-primary-container uppercase">
+                {{ i18n.language() === 'es' ? 'INTEGRIDAD' : 'INTEGRITY' }}: {{ 100 - ($index % 3) * 5 }}%
+              </span>
+              <span class="font-label-mono text-[9px] text-secondary uppercase">
+                {{ i18n.language() === 'es' ? 'ESTADO: VALIDO' : 'STATUS: VALID' }}
+              </span>
+            </div>
+            
+            <div class="integrity-bar mb-4">
+              <div class="integrity-bar-fill" [style.width.%]="100 - ($index % 3) * 5"></div>
+            </div>
+
+            @if (cert.credential_url) {
+              <a class="glitch-hover font-label-mono text-[10px] flex items-center gap-2 text-primary tracking-tighter min-h-[44px] py-2 no-underline hover:text-primary-container transition-all"
+                 [href]="cert.credential_url" target="_blank" rel="noopener noreferrer">
+                [{{ i18n.language() === 'es' ? 'VER_CREDENCIAL' : 'VIEW_CREDENTIAL' }}] <span class="text-xs">→</span>
+              </a>
+            }
+          </div>
         </div>
-        }
-
-        <h3 class="text-lg font-bold mb-2">
-          {{ i18n.getText(cert.title, cert.title_en) }}
-        </h3>
-        <p class="text-blue-400 mb-2">{{ cert.issuing_organization }}</p>
-
-        @if (cert.issue_date) {
-        <p class="text-gray-400 text-sm mb-2">
-          {{ i18n.language() === 'es' ? 'Emitido:' : 'Issued:' }} {{ formatDate(cert.issue_date) }}
-        </p>
-        }
-
-        @if (cert.credential_url) {
-        <a [href]="cert.credential_url" target="_blank" rel="noopener noreferrer"
-          class="text-blue-400 hover:text-blue-300 text-sm inline-block">
-          {{ i18n.language() === 'es' ? 'Ver credencial' : 'View credential' }} →
-        </a>
-        }
-      </div>
       }
     </div>
 
+    <!-- Visit all certs link -->
     @if (profile()?.certifications_link) {
-    <div class="text-center mt-8">
-      <a [href]="profile()!.certifications_link!" target="_blank" rel="noopener noreferrer"
-        class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white">
-        <i class="fas fa-external-link-alt mr-2"></i>
-        {{ i18n.language() === 'es' ? 'Ver Todas las Certificaciones' : 'View All Certifications' }}
-      </a>
-    </div>
+      <div class="text-center mt-12">
+        <a [href]="profile()!.certifications_link!" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center justify-center bg-primary-container text-on-primary-fixed border-2 border-primary-container font-label-mono px-4 py-3.5 sm:px-8 sm:py-4 min-h-[44px] voxel-shadow-magenta hover:bg-white hover:text-black transition-all active:translate-x-1 active:translate-y-1 uppercase no-underline text-xs sm:text-sm md:text-base">
+          <span class="material-symbols-outlined text-[16px] align-middle mr-2">hub</span>
+          {{ i18n.language() === 'es' ? 'VER_TODAS_LAS_CERTIFICACIONES' : 'VIEW_ALL_CERTIFICATIONS' }}
+        </a>
+      </div>
     }
-    } @else {
+  } @else {
+    <!-- Loader -->
     <div class="text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-      <p class="mt-4 text-gray-400">Loading...</p>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+      <p class="mt-4 font-label-mono text-gray-400">Loading...</p>
     </div>
-    }
+  }
+
+  <!-- Technical Network Visualization Element -->
+  <div class="mt-20 p-4 sm:p-8 border-2 border-dotted border-outline-variant relative overflow-hidden h-64 bg-[#0b0016] flex items-center justify-center voxel-shadow-purple">
+    <div class="absolute inset-0 opacity-20 pointer-events-none">
+      <!-- Complex Background Grid/Diagram Simulation -->
+      <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern height="10" id="smallGrid" patternunits="userSpaceOnUse" width="10">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="cyan" stroke-width="0.5"></path>
+          </pattern>
+        </defs>
+        <rect fill="url(#smallGrid)" height="100%" width="100%"></rect>
+      </svg>
+    </div>
+    <div class="z-10 text-center max-w-full px-2">
+      <span class="material-symbols-outlined text-[64px] text-secondary mb-4 animate-pulse">hub</span>
+      <h3 class="font-label-mono text-primary uppercase text-xl sm:text-2xl md:text-3xl break-all sm:break-normal">Neural_Synapse_Mapping</h3>
+      <p class="font-label-mono text-label-mono text-primary-container text-xs mt-2">
+        {{ i18n.language() === 'es' ? 'ESTADO DEL SISTEMA: TODOS LOS ENLACES OPERATIVOS' : 'SYSTEM STATUS: ALL LINKS OPERATIONAL' }}
+      </p>
+    </div>
+    <!-- Animated Floating Pixels -->
+    <div class="absolute top-10 left-10 w-4 h-4 bg-primary-container opacity-50 animate-bounce"></div>
+    <div class="absolute bottom-10 right-20 w-3 h-3 bg-secondary-container opacity-50 animate-pulse"></div>
+    <div class="absolute top-1/2 right-10 w-6 h-1 bg-primary shadow-[0_0_8px_#00f3ff]"></div>
   </div>
 </section>

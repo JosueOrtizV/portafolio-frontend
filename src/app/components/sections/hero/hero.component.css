@@ -8,15 +8,15 @@
   min-height: 100dvh;
 }
 
+@media (max-width: 1023px) {
+  #home {
+    height: auto !important;
+    min-height: auto !important;
+  }
+}
+
 /* Hero section mobile optimizations */
 @media (max-width: 640px) {
-  #home {
-    /* Asegurar altura completa en móvil considerando barras del navegador */
-    height: var(--vh, 100vh);
-    min-height: -webkit-fill-available; /* Safari iOS */
-    min-height: 100vh; /* Fallback */
-  }
-  
   #home .container {
     max-width: 100%;
   }

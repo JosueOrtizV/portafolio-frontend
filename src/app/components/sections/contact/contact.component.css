@@ -1,1 +1,18 @@
 /* Component specific styles */
+.terminal-cursor::after {
+  content: '_';
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.dotted-border-bottom {
+  border-bottom: 2px dotted #9500df;
+}
+
+.glow-cyan:hover {
+  box-shadow: 4px 4px 0px 0px #fe00fe, 0 0 15px rgba(0, 243, 255, 0.4);
+}

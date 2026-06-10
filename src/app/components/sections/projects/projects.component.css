@@ -6,24 +6,10 @@
   overflow: hidden;
 }
 
-/* Modal styles */
-.prose {
-  color: inherit;
-}
-
-.prose p {
-  margin-top: 0;
-  margin-bottom: 1em;
-}
-
-.prose-invert {
-  color: rgb(229 231 235);
-}
-
-/* Custom Scrollbar */
+/* Custom Scrollbar for Modal and Content */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgb(96 165 250 / 0.5) transparent;
+  scrollbar-color: var(--color-primary-container, #00f3ff) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -33,14 +19,92 @@
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
-  border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgb(96 165 250 / 0.5);
-  border-radius: 4px;
+  background: var(--color-primary-container, #00f3ff);
+  border: 2px solid transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgb(96 165 250 / 0.7);
+/* Voxel Shadows & Hover States */
+.voxel-shadow-cyan {
+  box-shadow: 6px 6px 0px 0px #00f3ff;
 }
+.voxel-shadow-magenta {
+  box-shadow: 6px 6px 0px 0px #fe00fe;
+}
+.voxel-shadow-purple {
+  box-shadow: 6px 6px 0px 0px #9500df;
+}
+
+.voxel-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.voxel-card:hover {
+  transform: translate(-4px, -4px);
+}
+.voxel-card.cyan:hover {
+  box-shadow: 10px 10px 0px 0px #00f3ff;
+}
+.voxel-card.magenta:hover {
+  box-shadow: 10px 10px 0px 0px #fe00fe;
+}
+.voxel-card.purple:hover {
+  box-shadow: 10px 10px 0px 0px #9500df;
+}
+
+/* Terminal Window Header styling */
+.terminal-header::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #ff5f56;
+  margin-right: 6px;
+}
+.terminal-header::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #ffbd2e;
+  box-shadow: 14px 0 0 #27c93f;
+  margin-left: 6px;
+}
+
+/* Modal Pop animation */
+.modal-container {
+  animation: modal-pop 0.2s ease-out;
+}
+@keyframes modal-pop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Scanlines overlay for the modal content */
+.modal-scanlines::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+}
+
+.grid-bg {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+}

@@ -1,34 +1,88 @@
 @if (isLoading()) {
-  <!-- Loading Screen -->
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-    <div class="text-center space-y-6">
-      <!-- Animated Logo/Icon -->
-      <div class="relative mx-auto w-24 h-24">
-        <div class="absolute inset-0 rounded-full border-4 border-blue-500/30"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 animate-spin"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-transparent border-r-purple-500 animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
-        <div class="absolute inset-2 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-          <i class="fas fa-code text-2xl text-blue-400"></i>
+  <!-- System Loader Screen -->
+  <div class="fixed inset-0 z-50 bg-background text-on-surface font-body-md overflow-hidden flex flex-col items-center justify-center">
+    <!-- Environmental Layers -->
+    <div class="fixed inset-0 grid-bg z-0"></div>
+    <div class="scanline-overlay"></div>
+    <div class="crt-glow"></div>
+
+    <!-- Main Content Canvas -->
+    <main class="relative z-10 w-screen h-screen flex flex-col items-center justify-center p-gutter">
+      <!-- Center Loading Assembly -->
+      <div class="flex flex-col items-center gap-8 md:gap-16">
+        <!-- Voxel Loading Glyph -->
+        <div class="perspective-1000">
+          <div class="voxel-cube">
+            <div class="cube-face face-front"></div>
+            <div class="cube-face face-back"></div>
+            <div class="cube-face face-right"></div>
+            <div class="cube-face face-left"></div>
+            <div class="cube-face face-top"></div>
+            <div class="cube-face face-bottom"></div>
+          </div>
+        </div>
+
+        <!-- Header Identity -->
+        <div class="text-center flex flex-col gap-2">
+          <h1 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary-container tracking-[0.2em] glitch-text relative" [attr.data-text]="'JOSUE_OS_V2.0'">JOSUE_OS_V2.0</h1>
+          <p class="font-label-mono text-secondary tracking-widest text-sm">PORTFOLIO_SYSTEM_LOADER</p>
+        </div>
+
+        <!-- Progress Module -->
+        <div class="w-full max-w-xl space-y-4 mt-8 px-4">
+          <div class="flex justify-between font-label-mono text-primary-fixed text-xs mb-1">
+            <span id="status-label" [class.text-secondary-container]="loadingStatus() === 'ACCESS_GRANTED'">{{ loadingStatus() }}</span>
+            <span id="percent-label">{{ loadingProgress() }}%</span>
+          </div>
+          <!-- Voxel Progress Bar -->
+          <div class="w-full h-8 border-2 border-primary-container bg-surface-container-lowest relative overflow-hidden shadow-[4px_4px_0px_0px_#fe00fe]">
+            <div class="h-full bg-primary-container transition-all duration-300 ease-out" [style.width.%]="loadingProgress()" style="animation: flicker 0.1s infinite;">
+              <!-- Highlight Overlay -->
+              <div class="w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50"></div>
+            </div>
+          </div>
+          <div class="font-vt323 text-on-surface-variant text-lg h-6 flex items-center overflow-hidden">
+            <span class="border-r-4 border-primary-container pr-2">{{ loadingTerminal() }}</span>
+          </div>
         </div>
       </div>
-      
-      <!-- Loading Text -->
-      <div class="space-y-2">
-        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          Josué Ortiz
-        </h2>
-        <p class="text-gray-400 text-sm">Loading portfolio...</p>
+
+      <!-- System Telemetry Corners -->
+      <!-- Top Left: ID -->
+      <div class="fixed top-margin-sm left-margin-sm border-l-2 border-t-2 border-primary-container p-4 font-label-mono space-y-1 text-xs hidden sm:block">
+        <div class="text-primary-fixed">NODE_ID: ARCH-8821</div>
+        <div class="text-secondary">CLASS: MECHATRONICS</div>
+        <div class="text-on-surface-variant">UPLINK: ACTIVE</div>
       </div>
-      
-      <!-- Progress Bar -->
-      <div class="w-64 h-1 bg-gray-700 rounded-full overflow-hidden mx-auto">
-        <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-pulse" style="width: 60%; animation: loading 2s ease-in-out infinite;"></div>
+      <!-- Top Right: Logic -->
+      <div class="fixed top-margin-sm right-margin-sm border-r-2 border-t-2 border-secondary-container p-4 text-right font-label-mono space-y-1 text-xs hidden sm:block">
+        <div class="text-primary-fixed">BUFFER_STATE: OPTIMAL</div>
+        <div class="text-secondary">CYCLES: 1.2M/s</div>
+        <div class="text-on-surface-variant">SYNC_FREQ: 60Hz</div>
       </div>
-    </div>
+      <!-- Bottom Left: Hardware -->
+      <div class="fixed bottom-margin-sm left-margin-sm border-l-2 border-b-2 border-primary-fixed p-4 font-label-mono space-y-1 text-xs hidden sm:block">
+        <div class="text-on-surface-variant">MEM_USAGE: 4096KB</div>
+        <div class="text-primary-fixed">LOAD_LEVEL: <span>{{ loadLevel() }}</span></div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-primary-container animate-pulse"></span>
+          <span class="text-secondary">HV_VOLTAGE: OK</span>
+        </div>
+      </div>
+      <!-- Bottom Right: Timestamp -->
+      <div class="fixed bottom-margin-sm right-margin-sm border-r-2 border-b-2 border-tertiary-fixed-dim p-4 text-right font-label-mono space-y-1 text-xs hidden sm:block">
+        <div class="text-primary-fixed">{{ systemTime() }}</div>
+        <div class="text-secondary">VERSION: BETA_0.92</div>
+        <div class="text-on-surface-variant">LOC: 35.6895°N, 139.6917°E</div>
+      </div>
+    </main>
   </div>
 }
 
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" [class.opacity-0]="isLoading()" [class.transition-opacity]="!isLoading()" [class.duration-500]="!isLoading()">
+<div class="scanlines"></div>
+<div id="cursor" class="custom-cursor"></div>
+
+<div class="min-h-screen" [class.opacity-0]="isLoading()" [class.transition-opacity]="!isLoading()" [class.duration-500]="!isLoading()">
   <!-- Header -->
   <app-header></app-header>
 
@@ -57,19 +111,19 @@
 
     <!-- Contact Section -->
     <app-contact></app-contact>
-</main>
+  </main>
 
   <!-- Footer -->
   <app-footer></app-footer>
 </div>
 
 <!-- Scroll to Top Button -->
-@if (showScrollTop()) {
+@if (showScrollTop() && !isScrollLocked()) {
   <button
     (click)="scrollToTop()"
-    class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+    class="fixed bottom-6 right-6 z-40 bg-primary-container text-background border-2 border-secondary-container p-3 rounded-none shadow-[4px_4px_0px_0px_#fe00fe] transition-all duration-200 hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:translate-x-[4px] active:translate-y-[4px]"
     aria-label="Scroll to top"
   >
-    <i class="fas fa-arrow-up text-xl"></i>
+    <span class="material-symbols-outlined block text-2xl font-bold">arrow_upward</span>
   </button>
 }

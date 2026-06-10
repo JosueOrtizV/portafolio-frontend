@@ -1,55 +1,135 @@
-<section #heroSection id="home" class="flex items-center justify-center px-4">
-  <div class="container mx-auto">
-    <div class="text-center space-y-6">
-      @if (profile(); as profileData) {
-      <!-- 3D Spline Viewer (replaces static photo) -->
-      <div class="block mx-auto max-w-sm md:max-w-xl mb-0 overflow-visible min-h-[220px] md:min-h-[320px]">
-        @defer (on idle) {
-        <app-hero-3d-viewer></app-hero-3d-viewer>
-        } @placeholder {
-        <div
-          class="w-full h-[220px] md:h-[320px] flex items-center justify-center bg-gray-800/20 rounded-xl animate-pulse">
-          <div class="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-        </div>
-        }
+<section #heroSection id="home"
+  class="pt-32 sm:pt-36 md:pt-48 pb-24 px-gutter min-h-screen flex flex-col items-center justify-start md:justify-center relative overflow-x-hidden">
+  @if (profile(); as profileData) {
+  <!-- Hero Content Wrapper -->
+  <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <!-- Hero Text Section -->
+    <div class="lg:col-span-5 flex flex-col items-start space-y-6 z-10">
+      <div class="inline-block px-3 py-1 bg-secondary-container text-white font-label-mono text-xs mb-4">
+        {{ i18n.language() === 'es' ? 'ESTADO: ACTIVO // PUERTO_8080' : 'STATUS: ONLINE // PORT_8080' }}
       </div>
-
-      <!-- Name & Profession -->
       <h1
-        class="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+        class="font-headline-lg text-[48px] md:text-[64px] lg:text-[72px] text-secondary-container neon-glow-magenta leading-none uppercase tracking-tighter">
         {{ profileData.full_name }}
       </h1>
-      <p class="text-2xl md:text-3xl text-gray-300 mb-6">
+      <h2 class="font-label-mono text-[20px] md:text-[24px] text-primary-container neon-glow-cyan uppercase">
         {{ i18n.getText(profileData.profession, profileData.profession_en) }}
-      </p>
-
-      <!-- Short Tagline -->
+      </h2>
       @if (i18n.getText(profileData.tagline, profileData.tagline_en)) {
-      <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-on-surface-variant font-body-lg max-w-md border-l-4 border-tertiary-container pl-4">
         {{ i18n.getText(profileData.tagline, profileData.tagline_en) }}
       </p>
       }
-
-      <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6 md:pt-8">
+      <div class="flex flex-wrap gap-4 pt-4">
+        <a href="#contact"
+          class="voxel-btn-hover cta-pulse bg-primary-container text-on-primary-fixed font-label-mono px-8 py-4 border-2 border-primary-container voxel-shadow-magenta transition-all active:translate-x-1 active:translate-y-1 uppercase flex items-center gap-2 no-underline">
+          <span class="material-symbols-outlined">terminal</span>
+          {{ i18n.sections.contactMe() }}
+        </a>
         @if (i18n.language() === 'es' ? profileData.cv_link : profileData.cv_link_en) {
         <a [href]="i18n.language() === 'es' ? profileData.cv_link : profileData.cv_link_en" target="_blank"
-          rel="noopener noreferrer"
-          class="glass px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all hover:scale-105" download>
+          rel="noopener noreferrer" download
+          class="font-label-mono px-8 py-4 border-2 border-on-surface-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all uppercase flex items-center gap-2 no-underline">
+          <span class="material-symbols-outlined">download</span>
           {{ i18n.sections.downloadCv() }}
         </a>
         }
-        <a href="#contact"
-          class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white">
-          {{ i18n.sections.contactMe() }}
-        </a>
       </div>
-      } @else {
-      <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-        <p class="mt-4 text-gray-400">Loading...</p>
+    </div>
+
+    <!-- Voxel/3D OS Window Section -->
+    <div class="lg:col-span-7 relative w-full">
+      <!-- Retro OS Window -->
+      <div
+        class="w-full h-auto md:aspect-video bg-surface-container border-2 border-primary-container voxel-shadow-purple flex flex-col overflow-hidden">
+        <!-- Window Header -->
+        <div class="terminal-window-header px-4 py-2 flex justify-between items-center select-none">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-sm">memory</span>
+            <span class="font-label-mono text-xs text-primary uppercase">RENDERER_SYSTEM.EXE</span>
+          </div>
+          <div class="flex gap-2">
+            <div
+              class="w-4 h-4 border border-primary flex items-center justify-center text-[10px] text-primary cursor-pointer hover:bg-primary/20">
+              -</div>
+            <div
+              class="w-4 h-4 border border-primary flex items-center justify-center text-[10px] text-primary cursor-pointer hover:bg-primary/20">
+              □</div>
+            <div
+              class="w-4 h-4 border border-primary flex items-center justify-center text-[10px] text-primary cursor-pointer hover:bg-error/50">
+              ×</div>
+          </div>
+        </div>
+
+        <!-- Content Area (Spline Viewer) -->
+        <div
+          class="flex-grow relative bg-surface-container-lowest overflow-hidden h-full min-h-[220px] md:min-h-[300px]">
+          @defer (on idle) {
+          <app-hero-3d-viewer class="block w-full h-full"></app-hero-3d-viewer>
+          } @placeholder {
+          <div class="w-full h-full flex items-center justify-center bg-surface-container-lowest animate-pulse">
+            <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+          </div>
+          }
+
+          <!-- Overlay HUD elements -->
+          <div class="absolute inset-0 p-6 flex flex-col justify-between pointer-events-none z-10">
+            <div class="flex justify-between font-label-mono text-[10px] text-primary-container/70 uppercase">
+              <div>FPS: 60.00</div>
+              <div>CORE_TEMP: 42°C</div>
+            </div>
+            <div class="self-end font-label-mono text-[10px] text-primary-container/70 uppercase">
+              VIEWPORT: 3D_SPACE
+            </div>
+          </div>
+
+          <!-- Central Interaction Hint -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+            <div
+              class="p-4 border border-primary/30 bg-background/40 backdrop-blur-sm font-label-mono text-primary text-xs uppercase animate-pulse border-dashed">
+              {{ i18n.language() === 'es' ? 'Haz click para interactuar' : 'Click to interact' }}
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Floating Bits -->
+      <div
+        class="absolute -top-6 -right-6 w-24 h-24 border-2 border-secondary-container voxel-shadow-magenta bg-surface p-2 hidden md:block z-20">
+        <div class="w-full h-full border border-dotted border-secondary-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary text-4xl"
+            style="font-variation-settings: 'FILL' 1;">grid_view</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative Footer Element for Hero -->
+  <div
+    class="mt-12 md:mt-24 w-full border-t-2 border-dotted border-outline-variant py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="font-label-mono text-label-mono text-on-surface-variant flex items-center gap-4">
+      <span class="flex gap-1">
+        <div class="w-2 h-2 bg-primary"></div>
+        <div class="w-2 h-2 bg-primary/60"></div>
+        <div class="w-2 h-2 bg-primary/30"></div>
+      </span>
+      SYS_VER: 2.0.0_STABLE
+    </div>
+    <div class="flex gap-8">
+      @if (profileData.social_networks.github) {
+      <a class="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary-fixed-dim transition-opacity uppercase no-underline"
+        [href]="profileData.social_networks.github" target="_blank" rel="noopener noreferrer">GITHUB</a>
+      }
+      @if (profileData.social_networks.linkedin) {
+      <a class="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary-fixed-dim transition-opacity uppercase no-underline"
+        [href]="profileData.social_networks.linkedin" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
       }
     </div>
   </div>
+  } @else {
+  <div class="text-center py-20">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+    <p class="mt-4 text-primary font-label-mono">LOADING SYSTEM PROFILE...</p>
+  </div>
+  }
 </section>

@@ -1,38 +1,43 @@
-<header 
-  class="fixed top-0 left-0 right-0 z-50 glass-dark transition-all duration-300"
-  [class.shadow-lg]="isScrolled()"
->
-  <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-    <!-- Logo/Name -->
-    <a href="#home" class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent" (click)="scrollToSection('home'); $event.preventDefault()">
-      JO
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" [class.shadow-lg]="isScrolled()">
+  <nav class="w-full bg-surface/90 backdrop-blur-sm border-b-2 border-primary shadow-[4px_4px_0px_0px_rgba(254,0,254,1)] flex justify-between items-center px-4 md:px-gutter py-4">
+    <!-- Logo -->
+    <a href="#home" class="font-headline-md text-lg sm:text-[24px] md:text-[32px] text-primary tracking-tighter neon-glow-cyan hover:no-underline" (click)="scrollToSection('home'); $event.preventDefault()">
+      JOSUE_ORTIZ.EXE
     </a>
 
     <!-- Desktop Navigation Links -->
-    <div class="hidden md:flex items-center space-x-6">
-      <a href="#about" class="text-blue-400 hover:text-blue-300 transition-colors no-underline font-medium" (click)="scrollToSection('about'); $event.preventDefault()">{{ i18n.sections.about() }}</a>
-      <a href="#skills" class="text-blue-400 hover:text-blue-300 transition-colors no-underline font-medium" (click)="scrollToSection('skills'); $event.preventDefault()">{{ i18n.sections.skills() }}</a>
-      <a href="#projects" class="text-blue-400 hover:text-blue-300 transition-colors no-underline font-medium" (click)="scrollToSection('projects'); $event.preventDefault()">{{ i18n.sections.projects() }}</a>
-      <a href="#experience" class="text-blue-400 hover:text-blue-300 transition-colors no-underline font-medium" (click)="scrollToSection('experience'); $event.preventDefault()">{{ i18n.sections.experience() }}</a>
-      <a href="#contact" class="text-blue-400 hover:text-blue-300 transition-colors no-underline font-medium" (click)="scrollToSection('contact'); $event.preventDefault()">{{ i18n.sections.contact() }}</a>
+    <div class="hidden md:flex gap-8 items-center">
+      <a class="font-label-mono text-label-mono uppercase text-on-surface-variant hover:text-primary hover:shadow-[0_0_10px_#00f3ff] transition-all active:translate-x-1 active:translate-y-1 no-underline" href="#about" (click)="scrollToSection('about'); $event.preventDefault()">
+        {{ i18n.sections.about() }}
+      </a>
+      <a class="font-label-mono text-label-mono uppercase text-on-surface-variant hover:text-primary hover:shadow-[0_0_10px_#00f3ff] transition-all active:translate-x-1 active:translate-y-1 no-underline" href="#skills" (click)="scrollToSection('skills'); $event.preventDefault()">
+        {{ i18n.sections.skills() }}
+      </a>
+      <a class="font-label-mono text-label-mono uppercase text-on-surface-variant hover:text-primary hover:shadow-[0_0_10px_#00f3ff] transition-all active:translate-x-1 active:translate-y-1 no-underline" href="#projects" (click)="scrollToSection('projects'); $event.preventDefault()">
+        {{ i18n.sections.projects() }}
+      </a>
+      <a class="font-label-mono text-label-mono uppercase text-on-surface-variant hover:text-primary hover:shadow-[0_0_10px_#00f3ff] transition-all active:translate-x-1 active:translate-y-1 no-underline" href="#experience" (click)="scrollToSection('experience'); $event.preventDefault()">
+        {{ i18n.sections.experience() }}
+      </a>
+      <a class="font-label-mono text-label-mono uppercase text-on-surface-variant hover:text-primary hover:shadow-[0_0_10px_#00f3ff] transition-all active:translate-x-1 active:translate-y-1 no-underline" href="#contact" (click)="scrollToSection('contact'); $event.preventDefault()">
+        {{ i18n.sections.contact() }}
+      </a>
     </div>
 
-    <!-- Right Side: Language Toggle + Mobile Menu Button -->
-    <div class="flex items-center space-x-3">
+    <!-- Actions: Lang Toggle + Connect / Mobile Menu -->
+    <div class="flex items-center gap-2 sm:gap-4">
       <!-- Language Toggle -->
-      <button
-        (click)="toggleLanguage()"
-        class="glass px-4 py-2 rounded-lg hover:bg-white/20 transition-colors text-sm font-medium"
-      >
-        <span>{{ i18n.language() === 'es' ? 'ES' : 'EN' }}</span>
+      <button (click)="toggleLanguage()" class="border-2 border-primary text-primary font-label-mono px-2.5 py-1.5 sm:px-4 sm:py-2 hover:bg-primary/10 transition-all active:translate-x-1 active:translate-y-1 uppercase text-sm sm:text-base">
+        {{ i18n.language() === 'es' ? 'ES' : 'EN' }}
+      </button>
+
+      <!-- Connect Button (Desktop Only) -->
+      <button (click)="scrollToSection('contact')" class="hidden sm:block bg-primary-container text-on-primary font-label-mono px-6 py-2 border-2 border-primary voxel-shadow-magenta hover:bg-white transition-all active:translate-x-1 active:translate-y-1 uppercase">
+        {{ i18n.language() === 'es' ? 'CONECTAR' : 'CONNECT' }}
       </button>
 
       <!-- Mobile Menu Button -->
-      <button
-        (click)="toggleMobileMenu()"
-        class="md:hidden glass px-4 py-2 rounded-lg hover:bg-white/20 transition-colors text-sm font-medium"
-        aria-label="Toggle menu"
-      >
+      <button (click)="toggleMobileMenu()" class="md:hidden border-2 border-primary text-primary font-label-mono px-2.5 py-1.5 sm:px-4 sm:py-2 hover:bg-primary/10 transition-all active:translate-x-1 active:translate-y-1 uppercase text-sm sm:text-base" aria-label="Toggle menu">
         <i class="fas" [class.fa-bars]="!isMobileMenuOpen()" [class.fa-times]="isMobileMenuOpen()"></i>
       </button>
     </div>
@@ -40,42 +45,31 @@
 
   <!-- Mobile Menu -->
   <div 
-    class="md:hidden fixed top-16 right-0 w-64 bg-gray-900/95 backdrop-blur-md border border-white/20 rounded-bl-2xl shadow-2xl transition-all duration-300 overflow-hidden z-40"
+    class="md:hidden fixed top-[76px] right-0 w-64 bg-surface border-l-2 border-b-2 border-primary shadow-[4px_4px_0px_0px_rgba(254,0,254,1)] transition-all duration-300 overflow-hidden z-40"
     [class.max-h-0]="!isMobileMenuOpen()"
-    [class.max-h-96]="isMobileMenuOpen()"
+    [class.max-h-[350px]]="isMobileMenuOpen()"
     [class.opacity-0]="!isMobileMenuOpen()"
     [class.opacity-100]="isMobileMenuOpen()"
   >
-    <nav class="p-4 space-y-1">
-      <button
-        (click)="scrollToSection('about'); $event.preventDefault()"
-        class="w-full text-left px-4 py-3 rounded-lg text-gray-100 hover:bg-white/10 hover:text-blue-400 transition-colors font-medium"
-      >
+    <nav class="p-4 flex flex-col gap-4">
+      <button (click)="scrollToSection('about'); $event.preventDefault()" class="w-full text-left font-label-mono text-on-surface-variant hover:text-primary uppercase py-2 border-b border-primary/20 bg-transparent">
         {{ i18n.sections.about() }}
       </button>
-      <button
-        (click)="scrollToSection('skills'); $event.preventDefault()"
-        class="w-full text-left px-4 py-3 rounded-lg text-gray-100 hover:bg-white/10 hover:text-blue-400 transition-colors font-medium"
-      >
+      <button (click)="scrollToSection('skills'); $event.preventDefault()" class="w-full text-left font-label-mono text-on-surface-variant hover:text-primary uppercase py-2 border-b border-primary/20 bg-transparent">
         {{ i18n.sections.skills() }}
       </button>
-      <button
-        (click)="scrollToSection('projects'); $event.preventDefault()"
-        class="w-full text-left px-4 py-3 rounded-lg text-gray-100 hover:bg-white/10 hover:text-blue-400 transition-colors font-medium"
-      >
+      <button (click)="scrollToSection('projects'); $event.preventDefault()" class="w-full text-left font-label-mono text-on-surface-variant hover:text-primary uppercase py-2 border-b border-primary/20 bg-transparent">
         {{ i18n.sections.projects() }}
       </button>
-      <button
-        (click)="scrollToSection('experience'); $event.preventDefault()"
-        class="w-full text-left px-4 py-3 rounded-lg text-gray-100 hover:bg-white/10 hover:text-blue-400 transition-colors font-medium"
-      >
+      <button (click)="scrollToSection('experience'); $event.preventDefault()" class="w-full text-left font-label-mono text-on-surface-variant hover:text-primary uppercase py-2 border-b border-primary/20 bg-transparent">
         {{ i18n.sections.experience() }}
       </button>
-      <button
-        (click)="scrollToSection('contact'); $event.preventDefault()"
-        class="w-full text-left px-4 py-3 rounded-lg text-gray-100 hover:bg-white/10 hover:text-blue-400 transition-colors font-medium"
-      >
+      <button (click)="scrollToSection('contact'); $event.preventDefault()" class="w-full text-left font-label-mono text-on-surface-variant hover:text-primary uppercase py-2 bg-transparent">
         {{ i18n.sections.contact() }}
+      </button>
+      <!-- Connect (Mobile Only inside menu) -->
+      <button (click)="scrollToSection('contact')" class="w-full bg-primary-container text-on-primary font-label-mono py-2 border-2 border-primary voxel-shadow-magenta hover:bg-white transition-all uppercase text-center mt-2">
+        {{ i18n.language() === 'es' ? 'CONECTAR' : 'CONNECT' }}
       </button>
     </nav>
   </div>

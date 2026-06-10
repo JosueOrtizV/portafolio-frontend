@@ -26,4 +26,11 @@ export class EducationComponent {
       : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${months[date.getMonth()]} ${date.getFullYear()}`;
   }
+
+  protected getCardClasses(index: number): string {
+    // Alternates between magenta and purple shadows for visual interest
+    return index % 2 === 0 
+      ? 'voxel-shadow-magenta hover:shadow-[8px_8px_0px_0px_rgba(254,0,254,1)]' 
+      : 'voxel-shadow-purple hover:shadow-[12px_12px_0px_0px_rgba(149,0,223,1)]';
+  }
 }

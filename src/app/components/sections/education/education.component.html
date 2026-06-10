@@ -1,61 +1,98 @@
-<section id="education" class="py-12 md:py-20 px-4">
-  <div class="container mx-auto max-w-6xl">
-    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+<section id="education" class="py-12 md:py-20 px-4 relative z-10 max-w-6xl mx-auto">
+  <!-- Page Header -->
+  <div class="mb-12 border-l-4 border-primary-container pl-6">
+    <div class="inline-block bg-primary-container text-on-primary-container px-4 py-1 font-label-mono text-xs mb-4 uppercase">
+      SECURE_ACCESS_GRANTED
+    </div>
+    <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container uppercase drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] tracking-tighter crt-flicker flex flex-wrap items-center gap-4">
       {{ i18n.sections.education() }}
     </h2>
-    
-    @if (educations().length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @for (edu of educations(); track edu.id) {
-          <div class="bento-card">
-            <div class="flex gap-4">
-              <!-- Logo -->
-              @if (edu.institution_logo) {
-                <div class="flex-shrink-0">
-                  <img 
-                    [src]="edu.institution_logo" 
-                    [alt]="edu.institution"
-                    class="w-16 h-16 object-contain rounded-lg bg-white"
-                  />
-                </div>
-              }
-              
-              <!-- Content -->
-              <div class="flex-1">
-                <h3 class="text-lg font-bold mb-1">{{ edu.institution }}</h3>
-                <p class="text-blue-400 mb-2">
-                  {{ i18n.getText(edu.degree, edu.degree_en) }}
-                </p>
-                @if (i18n.getText(edu.field_of_study, edu.field_of_study_en)) {
-                  <p class="text-gray-400 text-sm mb-2">{{ i18n.getText(edu.field_of_study, edu.field_of_study_en) }}</p>
+    <p class="font-body-lg text-xs md:text-sm text-on-surface-variant mt-4 max-w-2xl font-label-mono">
+      {{ i18n.language() === 'es' ? 'LOG_SISTEMA: Compilando enlaces neuronales y certificaciones validadas.' : 'SYSTEM_LOG: Compiled neural links and validated data certifications.' }}
+    </p>
+  </div>
+
+  @if (educations().length > 0) {
+    <!-- Memory Modules (Degrees) - Folder/Tree Structure -->
+    <div class="relative flex flex-col gap-12">
+      <!-- Vertical Tree Line (Desktop only) -->
+      <div class="absolute left-[15px] top-0 bottom-0 w-[2px] border-l-2 border-dotted border-primary-container/30 hidden md:block"></div>
+      
+      @for (edu of educations(); track edu.id) {
+        <!-- Degree Item -->
+        <div class="relative pl-0 md:pl-12 group">
+          <!-- Tree Branch Node -->
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-primary-container/30 hidden md:block"></div>
+          <div class="absolute left-[11px] top-1/2 -translate-y-1/2 w-2 h-2 bg-primary-container hidden md:block"></div>
+          
+          <div class="bg-surface-container border-2 border-primary p-6 md:p-8 flex flex-col md:flex-row gap-8 hover:shadow-[0_0_20px_rgba(0,243,255,0.2)] transition-all cursor-pointer"
+               [ngClass]="getCardClasses($index)">
+            
+            <div class="flex-shrink-0 flex items-center justify-center">
+              <div class="w-24 h-24 bg-white border-2 border-primary-container flex items-center justify-center relative overflow-hidden flex-shrink-0">
+                @if (edu.institution_logo) {
+                  <img [src]="edu.institution_logo" [alt]="edu.institution" class="w-full h-full object-contain p-2" />
+                } @else {
+                  <span class="material-symbols-outlined text-headline-lg text-primary-container">school</span>
                 }
-                <p class="text-gray-400 text-sm">
-                  @if (edu.end_date) {
-                    {{ formatDate(edu.start_date) }} - {{ formatDate(edu.end_date) }}
-                  } @else {
-                    {{ formatDate(edu.start_date) }} - {{ i18n.language() === 'es' ? 'Actualidad' : 'Present' }}
-                  }
-                </p>
-                @if (edu.institution_url) {
-                  <a 
-                    [href]="edu.institution_url" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-blue-400 hover:text-blue-300 text-sm mt-2 inline-block font-medium"
-                  >
-                    {{ i18n.language() === 'es' ? 'Visitar sitio' : 'Visit site' }} →
-                  </a>
-                }
+                <div class="absolute -top-2 -right-2 bg-secondary-container text-on-secondary-container px-2 py-0.5 text-[8px] font-label-mono uppercase scale-90">VERIFIED</div>
               </div>
             </div>
+
+            <div class="flex-grow">
+              <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 gap-2">
+                <div>
+                  <h3 class="font-headline-md text-xl md:text-2xl text-primary uppercase leading-tight">
+                    {{ i18n.getText(edu.degree, edu.degree_en) }}
+                  </h3>
+                  <p class="font-body-md text-sm md:text-base text-on-surface-variant font-bold mt-1">
+                    {{ edu.institution }}
+                  </p>
+                </div>
+                
+                <div class="flex items-center self-start sm:self-auto">
+                  <span class="font-label-mono text-primary-container bg-primary-container/10 px-3 py-1 text-xs whitespace-nowrap">
+                    @if (edu.end_date) {
+                      {{ formatDate(edu.start_date) }} — {{ formatDate(edu.end_date) }}
+                    } @else {
+                      {{ formatDate(edu.start_date) }} — {{ i18n.language() === 'es' ? 'ACTUALIDAD' : 'PRESENT' }}
+                    }
+                  </span>
+                  
+                  @if (edu.institution_url) {
+                    <a [href]="edu.institution_url" target="_blank" rel="noopener noreferrer"
+                       class="bg-secondary-container text-on-secondary-container px-3 py-1.5 font-label-mono text-[10px] hover:bg-white hover:text-black transition-all ml-2 uppercase min-h-[44px] inline-flex items-center justify-center no-underline">
+                      [{{ i18n.language() === 'es' ? 'SITIO' : 'SITE' }}]
+                    </a>
+                  }
+                </div>
+              </div>
+
+              <!-- Sub-routines / Field of Study -->
+              @if (i18n.getText(edu.field_of_study, edu.field_of_study_en)) {
+                <div class="border-t border-outline-variant pt-4 mt-4">
+                  <p class="font-label-mono text-[11px] text-primary-container uppercase mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">terminal</span> EXEC_SUBROUTINES
+                  </p>
+                  <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 bg-primary-container"></div>
+                    <span class="font-label-mono text-label-mono uppercase text-xs md:text-sm text-on-surface-variant">
+                      {{ i18n.getText(edu.field_of_study, edu.field_of_study_en) }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+
           </div>
-        }
-      </div>
-    } @else {
-      <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-        <p class="mt-4 text-gray-400">Loading...</p>
-      </div>
-    }
-  </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Loader -->
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+      <p class="mt-4 font-label-mono text-gray-400">Loading...</p>
+    </div>
+  }
 </section>

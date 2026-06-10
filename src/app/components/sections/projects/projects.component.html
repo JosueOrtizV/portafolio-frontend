@@ -1,238 +1,317 @@
-<section #projectsSection id="projects" class="py-12 md:py-20 px-4">
-  <div class="container mx-auto max-w-7xl">
-    <h2
-      class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      {{ i18n.sections.projects() }}
-    </h2>
-
-    @if (projects().length > 0) {
-    <!-- Featured Projects (Bento Grid) -->
-    @if (getFeaturedProjects().length > 0) {
-    @if (cardsVisible()) {
-    <div @staggerCards class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-      @for (project of getFeaturedProjects(); track project.id) {
-      <div class="bento-card group cursor-pointer" [class.md:col-span-2]="$index === 0" (click)="openProject(project)">
-        @if (project.image_principal) {
-        <div class="relative overflow-hidden rounded-lg mb-4 aspect-video">
-          <img [ngSrc]="project.image_principal" fill [alt]="i18n.getText(project.title, project.title_en)"
-            class="object-cover transition-transform duration-300 group-hover:scale-110" [priority]="true" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          <div
-            class="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-black/50 border border-white/10 z-10 uppercase tracking-wide">
-            {{ i18n.language() === 'es' ? 'Destacado' : 'Featured' }}
-          </div>
-        </div>
-        }
-
-        <h3 class="text-xl font-bold mb-2">
-          {{ i18n.getText(project.title, project.title_en) }}
-        </h3>
-        <p class="text-gray-400 mb-4 line-clamp-2">
-          {{ i18n.getText(project.short_description, project.short_description_en) }}
-        </p>
-
-        <!-- Technologies -->
-        <div class="flex flex-wrap gap-2 mb-4">
-          @for (tech of project.technologies.slice(0, 4); track tech) {
-          <span class="text-xs glass px-2 py-1 rounded">{{ tech }}</span>
-          }
-          @if (project.technologies.length > 4) {
-          <span class="text-xs text-gray-500">+{{ project.technologies.length - 4 }}</span>
-          }
-        </div>
-
-        <!-- Links -->
-        <div class="flex gap-3">
-          @if (project.url_demo) {
-          <a [href]="project.url_demo" target="_blank" rel="noopener noreferrer"
-            class="bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white text-sm"
-            (click)="$event.stopPropagation()">
-            {{ i18n.language() === 'es' ? 'Ver Demo' : 'View Demo' }}
-          </a>
-          }
-          @if (project.url_repo) {
-          <a [href]="project.url_repo" target="_blank" rel="noopener noreferrer"
-            class="text-blue-400 hover:text-blue-300 text-sm font-medium" (click)="$event.stopPropagation()">
-            {{ i18n.language() === 'es' ? 'Código' : 'Code' }} →
-          </a>
-          }
-        </div>
-      </div>
-      }
+<section #projectsSection id="projects" [ngClass]="showProjectModal() ? 'z-auto' : 'z-10'" class="py-12 md:py-20 px-4 relative max-w-7xl mx-auto">
+  <div class="mb-12 flex flex-col items-start">
+    <div class="flex items-center gap-4 mb-4">
+      <span class="w-10 h-10 bg-primary-container inline-block shadow-[4px_4px_0px_0px_#fe00fe]"></span>
+      <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container uppercase drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] tracking-tighter crt-flicker">
+        {{ i18n.sections.projects() }}
+      </h2>
     </div>
-    }
-    }
-
-    <!-- All Projects Grid (sin destacados) -->
-    @if (getAllProjects().length > 0) {
-    <div>
-      <h3 class="text-2xl font-bold mb-6 text-center text-gray-300">
-        {{ i18n.language() === 'es' ? 'Otros Proyectos' : 'Other Projects' }}
-      </h3>
-      @if (cardsVisible()) {
-      <div @staggerCards class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @for (project of getAllProjects(); track project.id) {
-        <div class="bento-card group cursor-pointer" (click)="openProject(project)">
-          @if (project.image_principal) {
-          <div class="relative overflow-hidden rounded-lg mb-4 aspect-video">
-            <img [ngSrc]="project.image_principal" fill [alt]="i18n.getText(project.title, project.title_en)"
-              class="object-cover transition-transform duration-300 group-hover:scale-110" />
-          </div>
-          }
-
-          <h3 class="text-lg font-bold mb-2">
-            {{ i18n.getText(project.title, project.title_en) }}
-          </h3>
-          <p class="text-gray-400 mb-4 text-sm line-clamp-2">
-            {{ i18n.getText(project.short_description, project.short_description_en) }}
-          </p>
-
-          <!-- Technologies -->
-          <div class="flex flex-wrap gap-2 mb-4">
-            @for (tech of project.technologies.slice(0, 3); track tech) {
-            <span class="text-xs glass px-2 py-1 rounded">{{ tech }}</span>
-            }
-          </div>
-
-          <!-- Links -->
-          <div class="flex gap-3 text-sm">
-            @if (project.url_demo) {
-            <a [href]="project.url_demo" target="_blank" rel="noopener noreferrer"
-              class="text-blue-400 hover:text-blue-300 font-medium" (click)="$event.stopPropagation()">
-              {{ i18n.language() === 'es' ? 'Demo' : 'Demo' }} →
-            </a>
-            }
-            @if (project.url_repo) {
-            <a [href]="project.url_repo" target="_blank" rel="noopener noreferrer"
-              class="text-blue-400 hover:text-blue-300 font-medium" (click)="$event.stopPropagation()">
-              {{ i18n.language() === 'es' ? 'Código' : 'Code' }} →
-            </a>
-            }
-          </div>
-        </div>
-        }
-      </div>
-      }
-    </div>
-    }
-    } @else {
-    <div class="text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-      <p class="mt-4 text-gray-400">Loading...</p>
-    </div>
-    }
+    <p class="font-label-mono text-[18px] md:text-[22px] text-on-surface-variant max-w-2xl leading-tight whitespace-pre-line">
+      {{ systemLogText() }}
+    </p>
   </div>
+
+  @if (projects().length > 0) {
+    <!-- FEATURED_REPOSITORIES SECTION -->
+    @if (getFeaturedProjects().length > 0) {
+      <section class="mb-16">
+        <div class="flex items-center gap-4 mb-8">
+          <h3 class="font-headline-md text-[18px] text-secondary tracking-widest uppercase">
+            / {{ i18n.language() === 'es' ? 'PROYECTOS_DESTACADOS' : 'FEATURED_REPOSITORIES' }}
+          </h3>
+          <div class="flex-grow border-b-2 border-dotted border-outline-variant"></div>
+        </div>
+
+        @if (cardsVisible()) {
+          <div @staggerCards class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            @for (project of getFeaturedProjects(); track project.id) {
+              <div [class]="(getFeaturedProjects().length > 1 ? ($index % 2 === 0 ? 'lg:col-span-8' : 'lg:col-span-4') : 'lg:col-span-12') + ' md:col-span-12'">
+                <a class="block voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 cursor-pointer group flex flex-col h-full"
+                   [class.cyan]="$index % 2 === 0"
+                   [class.border-primary-container]="$index % 2 === 0"
+                   [class.voxel-shadow-cyan]="$index % 2 === 0"
+                   [class.magenta]="$index % 2 === 1"
+                   [class.border-secondary-container]="$index % 2 === 1"
+                   [class.voxel-shadow-magenta]="$index % 2 === 1"
+                   (click)="openProject(project)">
+                  
+                  <div class="terminal-header flex items-center justify-between mb-4 border-b border-outline-variant pb-2">
+                    <span class="font-label-mono text-[16px] text-on-surface-variant">NODE_REF: 0x{{ project.id.toString(16).toUpperCase() }}</span>
+                    <span class="font-label-mono text-[16px]"
+                          [class.text-primary-container]="$index % 2 === 0"
+                          [class.text-secondary]="$index % 2 === 1">
+                      {{ i18n.language() === 'es' ? 'DESTACADO' : 'FEATURED' }}
+                    </span>
+                  </div>
+
+                  @if (project.image_principal) {
+                    <div class="aspect-video w-full mb-6 overflow-hidden border-2 bg-surface-container relative"
+                         [class.border-primary]="$index % 2 === 0"
+                         [class.border-secondary]="$index % 2 === 1">
+                      <img [alt]="i18n.getText(project.title, project.title_en)" 
+                           class="w-full h-full object-cover grayscale-0 group-hover:grayscale transition-all duration-500" 
+                           [src]="project.image_principal" />
+                      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-black/60">
+                        <span class="bg-surface px-4 py-2 border-2 font-label-mono text-[16px] md:text-[20px]"
+                              [class.border-primary]="$index % 2 === 0"
+                              [class.text-primary]="$index % 2 === 0"
+                              [class.border-secondary]="$index % 2 === 1"
+                              [class.text-secondary]="$index % 2 === 1">
+                          {{ i18n.language() === 'es' ? 'ACCEDER_INFO' : 'ACCESS_INTEL' }}
+                        </span>
+                      </div>
+                    </div>
+                  }
+
+                  <div class="flex flex-col flex-grow justify-between">
+                    <div>
+                      <h4 class="font-headline-md text-[18px] md:text-[20px] text-primary mb-2">
+                        {{ i18n.getText(project.title, project.title_en) }}
+                      </h4>
+                      <p class="font-label-mono text-[16px] md:text-[18px] text-on-surface-variant mb-6 leading-normal">
+                        {{ i18n.getText(project.short_description, project.short_description_en) }}
+                      </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                      @for (tech of project.technologies.slice(0, 4); track tech) {
+                        <span class="px-2 py-1 font-label-mono text-[12px] md:text-[14px]"
+                              [class.bg-primary-container]="$index % 2 === 0"
+                              [class.text-on-primary-container]="$index % 2 === 0"
+                              [class.bg-secondary-container]="$index % 2 === 1"
+                              [class.text-on-secondary-container]="$index % 2 === 1">
+                          {{ tech | uppercase }}
+                        </span>
+                      }
+                      @if (project.technologies.length > 4) {
+                        <span class="text-xs font-label-mono text-gray-500 self-center">
+                          +{{ project.technologies.length - 4 }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </a>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <!-- OTHER_MODULES SECTION -->
+    @if (getAllProjects().length > 0) {
+      <section>
+        <div class="flex items-center gap-4 mb-8">
+          <h3 class="font-headline-md text-[18px] text-primary tracking-widest uppercase">
+            / {{ i18n.language() === 'es' ? 'OTROS_MODULOS' : 'OTHER_MODULES' }}
+          </h3>
+          <div class="flex-grow border-b-2 border-dotted border-outline-variant"></div>
+        </div>
+
+        @if (cardsVisible()) {
+          <div @staggerCards class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @for (project of getAllProjects(); track project.id) {
+              <div class="voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 flex flex-col h-full"
+                   [class]="getCardClasses($index)">
+                <div class="terminal-header flex items-center justify-between mb-4 border-b border-outline-variant pb-2">
+                  <span class="font-label-mono text-[16px] text-on-surface-variant">ID: 0x{{ project.id.toString(16).toUpperCase() }}</span>
+                  <span class="material-symbols-outlined" [class]="getIconColorClass($index)">{{ getProjectIcon(project) }}</span>
+                </div>
+                
+                @if (project.image_principal) {
+                  <div class="aspect-video w-full mb-6 overflow-hidden border-2 border-outline-variant bg-surface-container">
+                    <img [alt]="i18n.getText(project.title, project.title_en)" 
+                         class="w-full h-full object-cover grayscale-0 hover:grayscale transition-all duration-500" 
+                         [src]="project.image_principal" />
+                  </div>
+                }
+                
+                <h4 class="font-headline-md text-[16px] text-primary mb-4">
+                  {{ i18n.getText(project.title, project.title_en) }}
+                </h4>
+                <p class="font-label-mono text-[16px] text-on-surface-variant mb-6 flex-grow leading-normal">
+                  {{ i18n.getText(project.short_description, project.short_description_en) }}
+                </p>
+                <button class="w-full py-2 border-2 font-label-mono text-[16px] uppercase transition-colors group cursor-pointer"
+                        [class]="getButtonBorderClass($index)"
+                        (click)="openProject(project)">
+                  {{ i18n.language() === 'es' ? 'ACCEDER_ORIGEN' : 'ACCESS_SOURCE' }} <span class="group-hover:translate-x-1 inline-block transition-transform">→</span>
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+  } @else {
+    <div class="text-center py-20">
+      <div class="animate-spin rounded-none h-12 w-12 border-4 border-primary-container border-t-transparent mx-auto"></div>
+      <p class="mt-4 font-label-mono text-primary-container animate-pulse">CONNECTING_TO_DATABANK...</p>
+    </div>
+  }
 
   <!-- Project Detail Modal -->
   @if (showProjectModal() && selectedProject(); as project) {
-  <div class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm" (click)="closeProjectModal()">
-    <div class="flex items-center justify-center min-h-screen px-4 py-8">
-      <div class="glass-dark rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar"
-        (click)="$event.stopPropagation()">
-        <div class="p-6 md:p-8 relative">
-          <!-- Close Button -->
-          <button (click)="closeProjectModal()"
-            class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors z-10">
-            <i class="fas fa-times text-2xl"></i>
-          </button>
-
-          <!-- Project Images Gallery -->
-          @if (getProjectImages().length > 0) {
-          <div class="mb-6">
-            <!-- Main Image Display -->
-            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 group">
-              <img [ngSrc]="getProjectImages()[selectedImageIndex()]" fill
-                [alt]="i18n.getText(project.title, project.title_en) + ' - Image ' + (selectedImageIndex() + 1)"
-                class="object-cover" />
-
-              <!-- Navigation Arrows -->
-              @if (getProjectImages().length > 1) {
-              <button (click)="previousImage()"
-                class="absolute left-4 top-1/2 -translate-y-1/2 glass px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
-                aria-label="Previous image">
-                <i class="fas fa-chevron-left text-white"></i>
-              </button>
-              <button (click)="nextImage()"
-                class="absolute right-4 top-1/2 -translate-y-1/2 glass px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
-                aria-label="Next image">
-                <i class="fas fa-chevron-right text-white"></i>
-              </button>
-
-              <!-- Image Counter -->
-              <div class="absolute bottom-4 left-1/2 -translate-x-1/2 glass px-3 py-1 rounded-full text-sm">
-                {{ selectedImageIndex() + 1 }} / {{ getProjectImages().length }}
-              </div>
-              }
-            </div>
-
-            <!-- Thumbnail Gallery -->
-            @if (getProjectImages().length > 1) {
-            <div class="grid grid-cols-4 md:grid-cols-6 gap-2 mt-3 max-h-32 overflow-y-auto custom-scrollbar">
-              @for (image of getProjectImages(); track image; let i = $index) {
-              <div class="relative aspect-video rounded overflow-hidden cursor-pointer transition-all border-2"
-                [class.border-blue-400]="selectedImageIndex() === i"
-                [class.border-transparent]="selectedImageIndex() !== i" (click)="selectImage(i)">
-                <img [ngSrc]="image" fill [alt]="'Thumbnail ' + (i + 1)"
-                  class="object-cover hover:opacity-75 transition-opacity" />
-                @if (selectedImageIndex() === i) {
-                <div class="absolute inset-0 bg-blue-400/20"></div>
-                }
-              </div>
-              }
-            </div>
-            }
+    <div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 md:p-6"
+         (click)="closeProjectModal()">
+      
+      <!-- PROJ_INFO.EXE WINDOW -->
+      <div class="modal-container relative w-full max-w-5xl bg-[#0b0016] border-[4px] border-primary-container voxel-shadow-magenta overflow-hidden flex flex-col max-h-[calc(100vh-24px)] md:max-h-[calc(100vh-125px)]"
+           (click)="$event.stopPropagation()">
+        
+        <!-- WINDOW HEADER -->
+        <div class="bg-primary-container px-4 py-2 flex justify-between items-center select-none">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-on-primary-container" style="font-size: 20px;">terminal</span>
+            <h3 class="font-pixel text-[12px] md:text-[14px] text-on-primary-container tracking-wider uppercase">
+              PROJ_INFO.EXE - {{ i18n.getText(project.title, project.title_en) | uppercase }}
+            </h3>
           </div>
-          }
-
-          <!-- Project Info -->
-          <div class="space-y-4">
-            <h2 class="text-3xl md:text-4xl font-bold">
-              {{ i18n.getText(project.title, project.title_en) }}
-            </h2>
-
-            <p class="text-xl text-gray-300">
-              {{ i18n.getText(project.short_description, project.short_description_en) }}
-            </p>
-
-            <div class="prose prose-invert max-w-none">
-              <p class="text-gray-400 leading-relaxed whitespace-pre-line">
-                {{ i18n.getText(project.description, project.description_en) }}
-              </p>
-            </div>
-
-            <!-- Technologies -->
-            <div>
-              <h3 class="text-lg font-bold mb-3">
-                {{ i18n.language() === 'es' ? 'Tecnologías' : 'Technologies' }}
-              </h3>
-              <div class="flex flex-wrap gap-2">
-                @for (tech of project.technologies; track tech) {
-                <span class="glass px-3 py-1 rounded-full text-sm">{{ tech }}</span>
-                }
-              </div>
-            </div>
-
-            <!-- Links -->
-            <div class="flex gap-4 pt-4 border-t border-white/10">
-              @if (project.url_demo) {
-              <a [href]="project.url_demo" target="_blank" rel="noopener noreferrer"
-                class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all text-white">
-                <i class="fas fa-external-link-alt mr-2"></i>
-                {{ i18n.language() === 'es' ? 'Ver Demo' : 'View Demo' }}
-              </a>
-              }
-              @if (project.url_repo) {
-              <a [href]="project.url_repo" target="_blank" rel="noopener noreferrer"
-                class="glass px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all">
-                <i class="fab fa-github mr-2"></i>
-                {{ i18n.language() === 'es' ? 'Ver Código' : 'View Code' }}
-              </a>
-              }
-            </div>
+          <div class="flex gap-2">
+            <button (click)="closeProjectModal()" class="w-6 h-6 border-2 border-on-primary-container flex items-center justify-center hover:bg-secondary-container transition-colors cursor-pointer" aria-label="Minimize">
+              <span class="w-3 h-[2px] bg-on-primary-container"></span>
+            </button>
+            <button (click)="closeProjectModal()" class="w-6 h-6 border-2 border-on-primary-container flex items-center justify-center hover:bg-secondary-container transition-colors cursor-pointer" aria-label="Close">
+              <span class="material-symbols-outlined text-on-primary-container !text-[14px]">close</span>
+            </button>
           </div>
         </div>
+
+        <!-- WINDOW CONTENT -->
+        <div class="flex-1 overflow-y-auto md:overflow-hidden relative custom-scrollbar flex flex-col">
+          <div class="p-4 md:p-8 flex-1 flex flex-col min-h-0">
+            
+            <!-- HERO PREVIEW SECTION -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 flex-1 min-h-0">
+              
+              <!-- GALLERY COLUMN -->
+              <div class="md:col-span-7 flex flex-col h-full min-h-[300px] md:min-h-0 relative z-10">
+                @if (getProjectImages().length > 0) {
+                  <div class="flex-1 border-2 border-primary-container p-1 bg-surface-container-lowest voxel-shadow-cyan relative group min-h-0">
+                    <div class="w-full h-full relative overflow-hidden bg-black flex items-center justify-center">
+                      <img [src]="getProjectImages()[selectedImageIndex()]" 
+                           [alt]="i18n.getText(project.title, project.title_en) + ' - Image ' + (selectedImageIndex() + 1)"
+                           class="w-full h-full object-contain relative z-20" />
+                      <div class="absolute inset-0 bg-primary-container/10 pointer-events-none"></div>
+
+                      <!-- Navigation Arrows -->
+                      @if (getProjectImages().length > 1) {
+                        <button (click)="previousImage()"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 border border-primary-container p-2 rounded-none hover:bg-primary-container hover:text-on-primary-container transition-all text-primary-container cursor-pointer z-30"
+                                aria-label="Previous image">
+                          <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <button (click)="nextImage()"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 border border-primary-container p-2 rounded-none hover:bg-primary-container hover:text-on-primary-container transition-all text-primary-container cursor-pointer z-30"
+                                aria-label="Next image">
+                          <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- THUMBNAIL TRACK -->
+                  @if (getProjectImages().length > 1) {
+                    <div class="mt-4 flex gap-3 overflow-x-auto pb-2 flex-shrink-0 custom-scrollbar relative z-20 thumbnail-track">
+                      @for (image of getProjectImages(); track image; let i = $index) {
+                        <div class="w-24 h-16 border-2 flex-shrink-0 cursor-pointer transition-all bg-surface-container"
+                             [class.border-secondary-container]="selectedImageIndex() === i"
+                             [class.border-primary/20]="selectedImageIndex() !== i"
+                             [class.thumbnail-item-active]="selectedImageIndex() === i"
+                             (click)="selectImage(i)">
+                          <img [src]="image" [alt]="'Thumbnail ' + (i + 1)"
+                               class="w-full h-full object-cover transition-opacity" 
+                               [class.opacity-100]="selectedImageIndex() === i"
+                               [class.opacity-60]="selectedImageIndex() !== i" />
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+
+              <!-- DETAILS COLUMN -->
+              <div class="md:col-span-5 flex flex-col h-full min-h-[350px] md:min-h-0 justify-between modal-scanlines relative z-10">
+                
+                <!-- TOP HEADER INFO -->
+                <div class="flex-shrink-0 mb-4">
+                  <span class="bg-secondary-container text-on-secondary-container px-3 py-1 font-pixel text-[10px] mb-3 inline-block">
+                    {{ i18n.language() === 'es' ? 'SISTEMA_ACTIVO: V2.0' : 'SYSTEM_ACTIVE: V2.0' }}
+                  </span>
+                  <h4 class="font-headline-lg text-primary-container tracking-tight leading-none uppercase text-2xl md:text-3xl">
+                    {{ i18n.getText(project.title, project.title_en) }}
+                  </h4>
+                  <p class="font-terminal text-xl text-secondary mt-1">
+                    {{ i18n.getText(project.short_description, project.short_description_en) }}
+                  </p>
+                </div>
+
+                <!-- MIDDLE DESCRIPTION (SCROLLABLE ON DESKTOP) -->
+                <div class="flex-grow md:overflow-y-auto overflow-y-visible custom-scrollbar pr-2 mb-4 bg-surface-container/30 p-4 border-l-4 border-primary-container md:min-h-0">
+                  <p class="font-terminal text-[15px] leading-relaxed text-on-surface whitespace-pre-wrap">
+                    {{ i18n.getText(project.description, project.description_en) }}
+                  </p>
+                </div>
+
+                <!-- TECH STACK (FIXED AT THE BOTTOM) -->
+                <div class="flex-shrink-0 border-t border-outline-variant/30 pt-4">
+                  <h5 class="font-pixel text-[10px] text-primary/60 mb-3 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-primary-container"></span> {{ i18n.language() === 'es' ? 'TECNOLOGIAS_USADAS' : 'TECHNOLOGIES_USED' }}
+                  </h5>
+                  <div class="flex flex-wrap gap-2 max-h-[120px] overflow-y-auto custom-scrollbar">
+                    @for (tech of project.technologies; track tech) {
+                      <span class="bg-surface-container-highest border border-outline px-3 py-1 font-label-mono text-[12px] hover:bg-primary-container hover:text-on-primary-container cursor-default transition-colors uppercase">
+                        {{ tech }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- WINDOW FOOTER ACTIONS -->
+        <div class="p-3 sm:p-6 border-t-2 border-dotted border-outline-variant flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-6 bg-surface-container-lowest/50">
+          <div class="hidden sm:flex items-center gap-4 text-primary/40 font-label-mono text-[12px]">
+            <span class="hidden sm:flex items-center gap-1">
+              <span class="w-2 h-2 bg-primary-container animate-pulse"></span> {{ i18n.language() === 'es' ? 'SISTEMA_ESTABLE' : 'SYSTEM_STABLE' }}
+            </span>
+            <span class="hidden md:block">|</span>
+            <span class="hidden md:block">{{ i18n.language() === 'es' ? 'CANT_TECNOLOGIAS' : 'TECH_COUNT' }}: {{ project.technologies.length }}</span>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+            @if (project.url_demo) {
+              <a [href]="project.url_demo" target="_blank" rel="noopener noreferrer"
+                 class="w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2 bg-secondary-container text-on-secondary-container font-pixel text-[10px] sm:text-[12px] px-3 py-2 sm:px-6 sm:py-4 border-2 border-secondary shadow-[4px_4px_0px_0px_#00f3ff] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all active:scale-95 group uppercase">
+                <span class="material-symbols-outlined !text-[16px] sm:!text-[18px]">open_in_new</span>
+                {{ i18n.language() === 'es' ? 'VER_DEMO' : 'VIEW_DEMO' }}
+              </a>
+            }
+            @if (project.url_repo) {
+              <a [href]="project.url_repo" target="_blank" rel="noopener noreferrer"
+                 class="w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-primary-container text-primary-container font-pixel text-[10px] sm:text-[12px] px-3 py-2 sm:px-6 sm:py-4 hover:bg-primary-container/10 transition-all active:scale-95 group uppercase">
+                <span class="material-symbols-outlined !text-[16px] sm:!text-[18px]">code</span>
+                {{ i18n.language() === 'es' ? 'CODIGO_FUENTE' : 'SOURCE_CODE' }}
+              </a>
+            }
+          </div>
+        </div>
+
+        <!-- BOTTOM STATUS BAR -->
+        <div class="bg-primary-container py-0.5 sm:py-0 sm:h-6 px-2 sm:px-4 flex items-center justify-between text-[8px] sm:text-[10px] font-pixel text-on-primary-container">
+          <div class="flex gap-2 sm:gap-4 truncate">
+            <span class="truncate">PATH: /HOME/PROJECTS/{{ project.title.replace(' ', '_').replace('(', '').replace(')', '').replace('+', '').replace('__', '_').toUpperCase() }}</span>
+            <span class="hidden sm:block">ID: 0x{{ project.id.toString(16).toUpperCase() }}</span>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <span class="animate-pulse">_</span>
+            <span>{{ i18n.language() === 'es' ? '100% SEGURO' : '100% SECURE' }}</span>
+          </div>
+        </div>
+
       </div>
     </div>
-  </div>
   }
 </section>
