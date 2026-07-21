@@ -107,32 +107,54 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @for (project of getAllProjects(); track project.id) {
-              <div class="projects-other-card voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 flex flex-col h-full opacity-0"
-                   [class]="getCardClasses($index)">
+              <div class="projects-other-card voxel-card bg-[#0b0016] border-2 p-6 transition-all duration-200 flex flex-col h-full opacity-0 cursor-pointer hover:-translate-y-2 group"
+                   [class]="getCardClasses($index)"
+                   (click)="openProject(project)">
                 <div class="terminal-header flex items-center justify-between mb-4 border-b border-outline-variant pb-2">
                   <span class="font-label-mono text-[16px] text-on-surface-variant">ID: 0x{{ project.id.toString(16).toUpperCase() }}</span>
                   <span class="material-symbols-outlined" [class]="getIconColorClass($index)">{{ getProjectIcon(project) }}</span>
                 </div>
                 
                 @if (project.image_principal) {
-                  <div class="aspect-video w-full mb-6 overflow-hidden border-2 border-outline-variant bg-surface-container">
+                  <div class="aspect-video w-full mb-6 overflow-hidden border-2 border-outline-variant bg-surface-container relative">
                     <img [alt]="i18n.getText(project.title, project.title_en)" 
-                         class="w-full h-full object-cover grayscale-0 hover:grayscale transition-all duration-500" 
+                         class="w-full h-full object-cover grayscale-0 group-hover:grayscale transition-all duration-500" 
                          [src]="project.image_principal" />
+                     <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-black/60">
+                       <span class="bg-surface px-4 py-2 border-2 font-label-mono text-[14px]"
+                             [class.border-primary]="$index % 2 === 0"
+                             [class.text-primary]="$index % 2 === 0"
+                             [class.border-secondary]="$index % 2 === 1"
+                             [class.text-secondary]="$index % 2 === 1">
+                         {{ i18n.language() === 'es' ? 'ACCEDER_INFO' : 'ACCESS_INTEL' }}
+                       </span>
+                     </div>
                   </div>
                 }
                 
-                <h4 class="font-headline-md text-[16px] text-primary mb-4">
+                <h4 class="font-headline-md text-[16px] text-primary mb-4 group-hover:text-secondary transition-colors">
                   {{ i18n.getText(project.title, project.title_en) }}
                 </h4>
                 <p class="font-label-mono text-[16px] text-on-surface-variant mb-6 flex-grow leading-normal">
                   {{ i18n.getText(project.short_description, project.short_description_en) }}
                 </p>
-                <button class="w-full py-2 border-2 font-label-mono text-[16px] uppercase transition-colors group cursor-pointer"
-                        [class]="getButtonBorderClass($index)"
-                        (click)="openProject(project)">
-                  {{ i18n.language() === 'es' ? 'ACCEDER_ORIGEN' : 'ACCESS_SOURCE' }} <span class="group-hover:translate-x-1 inline-block transition-transform">→</span>
-                </button>
+
+                <div class="flex flex-wrap gap-2 mt-auto">
+                  @for (tech of project.technologies.slice(0, 4); track tech) {
+                    <span class="px-2 py-1 font-label-mono text-[12px]"
+                          [class.bg-primary-container]="$index % 2 === 0"
+                          [class.text-on-primary-container]="$index % 2 === 0"
+                          [class.bg-secondary-container]="$index % 2 === 1"
+                          [class.text-on-secondary-container]="$index % 2 === 1">
+                      {{ tech | uppercase }}
+                    </span>
+                  }
+                  @if (project.technologies.length > 4) {
+                    <span class="text-xs font-label-mono text-gray-500 self-center">
+                      +{{ project.technologies.length - 4 }}
+                    </span>
+                  }
+                </div>
               </div>
             }
           </div>
