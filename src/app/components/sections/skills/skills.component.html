@@ -274,7 +274,7 @@
       </div>
     </div>
     <div class="p-6 font-label-mono text-[13px] text-primary-container leading-relaxed h-48 overflow-y-auto">
-      @for (log of logs(); track log) {
+      @for (log of logs(); track $index) {
       <p>{{ log }}</p>
       }
       <p class="animate-pulse">_</p>

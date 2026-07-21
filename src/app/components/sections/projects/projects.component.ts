@@ -76,18 +76,27 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   public showProjectModal = signal(false);
   public selectedImageIndex = signal(0);
   public isFullscreen = signal(false);
+  public isZoomed = signal(false);
 
   public toggleFullscreen(): void {
     this.isFullscreen.update(val => !val);
+    this.isZoomed.set(false);
+  }
+
+  public toggleZoom(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isZoomed.update(val => !val);
   }
 
   public openProject(project: Project): void {
     this.selectedProject.set(project);
     this.selectedImageIndex.set(0);
     this.isFullscreen.set(false);
+    this.isZoomed.set(false);
     this.showProjectModal.set(true);
-    // Prevenir scroll del body cuando el modal está abierto
+    // Prevenir scroll del body y html cuando el modal está abierto
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
     // Animar la entrada del modal
     setTimeout(() => {
@@ -108,13 +117,27 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.selectedProject.set(null);
     this.selectedImageIndex.set(0);
     this.isFullscreen.set(false);
-    // Restaurar scroll del body
+    this.isZoomed.set(false);
+    // Restaurar scroll del body y html
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+
+  public onFullscreenWheel(event: WheelEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.deltaY < 0 && !this.isZoomed()) {
+      this.isZoomed.set(true);
+    } else if (event.deltaY > 0 && this.isZoomed()) {
+      this.isZoomed.set(false);
+    }
   }
 
   @HostListener('document:keydown.escape')
   public handleEscapeKey(): void {
-    if (this.isFullscreen()) {
+    if (this.isZoomed()) {
+      this.isZoomed.set(false);
+    } else if (this.isFullscreen()) {
       this.isFullscreen.set(false);
     } else if (this.showProjectModal()) {
       this.closeProjectModal();
@@ -141,11 +164,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   public selectImage(index: number): void {
+    this.isZoomed.set(false);
     this.selectedImageIndex.set(index);
     this.scrollToActiveThumbnail();
   }
 
   public nextImage(): void {
+    this.isZoomed.set(false);
     const images = this.getProjectImages();
     const currentIndex = this.selectedImageIndex();
     if (currentIndex < images.length - 1) {
@@ -157,6 +182,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   public previousImage(): void {
+    this.isZoomed.set(false);
     const images = this.getProjectImages();
     const currentIndex = this.selectedImageIndex();
     if (currentIndex > 0) {

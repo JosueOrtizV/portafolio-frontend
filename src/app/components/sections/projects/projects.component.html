@@ -344,21 +344,26 @@
 
   <!-- FULLSCREEN IMAGE OVERLAY -->
   @if (isFullscreen() && getProjectImages().length > 0) {
-    <div class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-2 md:p-8"
-         (click)="toggleFullscreen()">
+    <div class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-2 md:p-8 overscroll-none touch-none"
+         (click)="toggleFullscreen()"
+         (wheel)="onFullscreenWheel($event)">
       
       <!-- Close Button -->
-      <button (click)="toggleFullscreen()" 
+      <button (click)="toggleFullscreen(); $event.stopPropagation()" 
               class="absolute top-4 right-4 md:top-6 md:right-6 text-primary-container bg-black/80 border border-primary-container p-2 z-[110] md:hover:bg-primary-container md:hover:text-on-primary-container active:bg-primary-container active:text-on-primary-container transition-colors cursor-pointer" 
               title="Cerrar pantalla completa">
         <span class="material-symbols-outlined text-2xl md:text-4xl">close</span>
       </button>
       
       <!-- Image Container -->
-      <div class="relative max-w-full max-h-full flex items-center justify-center" (click)="$event.stopPropagation()">
+      <div class="relative w-full h-full max-w-full max-h-full flex items-center justify-center overflow-auto custom-scrollbar p-1 md:p-4" (click)="$event.stopPropagation()">
         <img [src]="getProjectImages()[selectedImageIndex()]" 
              [alt]="selectedProject()?.title || 'Fullscreen view'"
-             class="max-w-[95vw] md:max-w-[90vw] max-h-[80vh] md:max-h-[85vh] object-contain border-2 border-primary-container voxel-shadow-cyan" />
+             class="w-full max-w-full max-h-[85vh] object-contain border-2 border-primary-container voxel-shadow-cyan transition-transform duration-300 select-none cursor-zoom-in"
+             [class.scale-[1.75]]="isZoomed()"
+             [class.md:scale-150]="isZoomed()"
+             [class.cursor-zoom-out]="isZoomed()"
+             (click)="toggleZoom($event)" />
       </div>
 
       <!-- Navigation Arrows -->
