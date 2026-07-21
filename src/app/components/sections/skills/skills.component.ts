@@ -39,33 +39,38 @@ export class SkillsComponent implements OnInit, OnDestroy {
 
   public readonly frontendSkillsFirstHalf = computed(() => {
     const list = this.frontendSkills();
+    const explicit = list.filter(s => s.subcategory === 'core_frameworks');
+    if (explicit.length > 0) return explicit;
+    // Fallback si no tiene subcategorías configuradas aún
     return list.slice(0, Math.ceil(list.length / 2));
   });
 
   public readonly frontendSkillsSecondHalf = computed(() => {
     const list = this.frontendSkills();
+    const explicit = list.filter(s => s.subcategory === 'styling_engine');
+    if (explicit.length > 0) return explicit;
+    // Fallback si no tiene subcategorías configuradas aún
     return list.slice(Math.ceil(list.length / 2));
   });
 
   public readonly backendSkills = computed(() => 
-    this.skills().filter(skill => skill.category === 'backend' && skill.is_active)
+    this.skills().filter(skill => (skill.category === 'backend' || skill.subcategory === 'languages') && skill.is_active)
   );
 
-
   public readonly databaseSkills = computed(() => 
-    this.skills().filter(skill => skill.category === 'database' && skill.is_active)
+    this.skills().filter(skill => (skill.category === 'database' || skill.subcategory === 'infrastructure') && skill.is_active)
   );
 
   public readonly toolsSkills = computed(() => 
-    this.skills().filter(skill => skill.category === 'tools' && skill.is_active)
+    this.skills().filter(skill => (skill.category === 'tools' || skill.subcategory === 'tooling') && skill.is_active)
   );
 
   public readonly softSkills = computed(() => 
-    this.skills().filter(skill => skill.skill_type === 'soft' && skill.is_active)
+    this.skills().filter(skill => (skill.skill_type === 'soft' || skill.subcategory === 'neural') && skill.is_active)
   );
 
   public readonly hardSkills = computed(() => 
-    this.skills().filter(skill => skill.skill_type === 'hard' && skill.is_active)
+    this.skills().filter(skill => (skill.subcategory === 'hardware' || (skill.category === 'other' && skill.skill_type === 'hard')) && skill.is_active)
   );
 
   public readonly averageFrontendLevel = computed(() => {

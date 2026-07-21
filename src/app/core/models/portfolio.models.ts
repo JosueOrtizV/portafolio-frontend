@@ -25,6 +25,7 @@ export interface Skill {
   name_en?: string | null;
   icon?: string | null;
   category: 'frontend' | 'backend' | 'database' | 'tools' | 'other';
+  subcategory?: string | null;
   skill_type?: 'soft' | 'hard' | null;
   level: number;
   order: number;
