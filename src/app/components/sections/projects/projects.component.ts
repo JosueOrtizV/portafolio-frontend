@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit, OnDestroy, ElementRef, ViewChild, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ApiService } from '../../../core/services/api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -19,6 +20,7 @@ gsap.registerPlugin(ScrollTrigger);
 export class ProjectsComponent implements OnInit, OnDestroy {
   public readonly i18n = inject(I18nService);
   public readonly api = inject(ApiService);
+  private readonly sanitizer = inject(DomSanitizer);
 
   public readonly projects = toSignal(this.api.getProjects(), { initialValue: [] as Project[] });
 
@@ -73,10 +75,16 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   public selectedProject = signal<Project | null>(null);
   public showProjectModal = signal(false);
   public selectedImageIndex = signal(0);
+  public isFullscreen = signal(false);
+
+  public toggleFullscreen(): void {
+    this.isFullscreen.update(val => !val);
+  }
 
   public openProject(project: Project): void {
     this.selectedProject.set(project);
     this.selectedImageIndex.set(0);
+    this.isFullscreen.set(false);
     this.showProjectModal.set(true);
     // Prevenir scroll del body cuando el modal está abierto
     document.body.style.overflow = 'hidden';
@@ -99,13 +107,16 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.showProjectModal.set(false);
     this.selectedProject.set(null);
     this.selectedImageIndex.set(0);
+    this.isFullscreen.set(false);
     // Restaurar scroll del body
     document.body.style.overflow = '';
   }
 
   @HostListener('document:keydown.escape')
   public handleEscapeKey(): void {
-    if (this.showProjectModal()) {
+    if (this.isFullscreen()) {
+      this.isFullscreen.set(false);
+    } else if (this.showProjectModal()) {
       this.closeProjectModal();
     }
   }
@@ -215,6 +226,28 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return 'grid_view';
     }
     return 'terminal';
+  }
+
+  public formatDescription(text: string | undefined): SafeHtml {
+    if (!text) return '';
+
+    const lines = text.split('\n');
+    const html = lines.map(line => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('•') || (trimmed.startsWith('-') && !trimmed.startsWith('---'))) {
+        const content = trimmed.substring(1).trim();
+        const colonIndex = content.indexOf(':');
+        if (colonIndex > 0 && colonIndex < 40) {
+          const title = content.substring(0, colonIndex + 1);
+          const rest = content.substring(colonIndex + 1);
+          return `<div class="flex items-start gap-2.5 my-1.5 pl-1"><span class="text-primary-container font-pixel text-[11px] mt-0.5 flex-shrink-0 select-none">&gt;&gt;</span><div><strong class="text-secondary font-bold mr-1">${title}</strong><span>${rest}</span></div></div>`;
+        }
+        return `<div class="flex items-start gap-2.5 my-1.5 pl-1"><span class="text-primary-container font-pixel text-[11px] mt-0.5 flex-shrink-0 select-none">&gt;&gt;</span><span>${content}</span></div>`;
+      }
+      return line ? `<p class="mb-2">${line}</p>` : '<div class="h-2"></div>';
+    }).join('');
+
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   private initScrollAnimations() {

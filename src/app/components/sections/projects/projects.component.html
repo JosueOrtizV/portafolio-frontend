@@ -151,7 +151,7 @@
          (click)="closeProjectModal()">
       
       <!-- PROJ_INFO.EXE WINDOW -->
-      <div class="projects-modal-container relative w-full max-w-5xl bg-[#0b0016] border-[4px] border-primary-container voxel-shadow-magenta overflow-hidden flex flex-col max-h-[calc(100vh-24px)] md:max-h-[calc(100vh-125px)] opacity-0"
+      <div class="projects-modal-container relative w-full max-w-6xl bg-[#0b0016] border-[4px] border-primary-container voxel-shadow-magenta overflow-hidden flex flex-col max-h-[calc(100vh-24px)] md:max-h-[calc(100vh-80px)] opacity-0"
            (click)="$event.stopPropagation()">
         
         <!-- WINDOW HEADER -->
@@ -183,11 +183,19 @@
               <div class="md:col-span-7 flex flex-col h-full min-h-[300px] md:min-h-0 relative z-10">
                 @if (getProjectImages().length > 0) {
                   <div class="flex-1 border-2 border-primary-container p-1 bg-surface-container-lowest voxel-shadow-cyan relative group min-h-0">
-                    <div class="w-full h-full relative overflow-hidden bg-black flex items-center justify-center">
+                    <div class="w-full h-full relative overflow-hidden bg-black flex items-center justify-center group/img">
                       <img [src]="getProjectImages()[selectedImageIndex()]" 
                            [alt]="i18n.getText(project.title, project.title_en) + ' - Image ' + (selectedImageIndex() + 1)"
-                           class="w-full h-full object-contain relative z-20" />
+                           class="w-full h-full object-contain relative z-20 cursor-zoom-in group-hover/img:scale-[1.02] transition-transform duration-300"
+                           (click)="toggleFullscreen()" />
                       <div class="absolute inset-0 bg-primary-container/10 pointer-events-none"></div>
+
+                      <!-- Fullscreen Zoom Icon Button -->
+                      <button (click)="toggleFullscreen()" 
+                              class="absolute top-3 right-3 bg-black/70 border border-primary-container p-1.5 text-primary-container hover:bg-primary-container hover:text-on-primary-container transition-all z-30 cursor-pointer"
+                              title="Ver en pantalla completa">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span>
+                      </button>
 
                       <!-- Navigation Arrows -->
                       @if (getProjectImages().length > 1) {
@@ -229,33 +237,33 @@
               <div class="md:col-span-5 flex flex-col h-full min-h-[350px] md:min-h-0 justify-between modal-scanlines relative z-10">
                 
                 <!-- TOP HEADER INFO -->
-                <div class="flex-shrink-0 mb-4">
-                  <span class="bg-secondary-container text-on-secondary-container px-3 py-1 font-pixel text-[10px] mb-3 inline-block">
+                <div class="flex-shrink-0 mb-3">
+                  <span class="bg-secondary-container text-on-secondary-container px-3 py-1 font-pixel text-[10px] mb-2 inline-block">
                     {{ i18n.language() === 'es' ? 'SISTEMA_ACTIVO: V2.0' : 'SYSTEM_ACTIVE: V2.0' }}
                   </span>
-                  <h4 class="font-headline-lg text-primary-container tracking-tight leading-none uppercase text-2xl md:text-3xl">
+                  <h4 class="font-headline-lg text-primary-container tracking-tight leading-tight uppercase text-xl md:text-2xl font-bold">
                     {{ i18n.getText(project.title, project.title_en) }}
                   </h4>
-                  <p class="font-terminal text-xl text-secondary mt-1">
+                  <p class="font-terminal text-base md:text-lg text-secondary mt-1">
                     {{ i18n.getText(project.short_description, project.short_description_en) }}
                   </p>
                 </div>
 
                 <!-- MIDDLE DESCRIPTION (SCROLLABLE ON DESKTOP) -->
-                <div class="flex-grow md:overflow-y-auto overflow-y-visible custom-scrollbar pr-2 mb-4 bg-surface-container/30 p-4 border-l-4 border-primary-container md:min-h-0">
-                  <p class="font-terminal text-[15px] leading-relaxed text-on-surface whitespace-pre-wrap">
-                    {{ i18n.getText(project.description, project.description_en) }}
-                  </p>
+                <div class="flex-grow md:overflow-y-auto overflow-y-visible custom-scrollbar pr-2 mb-3 bg-surface-container/30 p-4 border-l-4 border-primary-container md:min-h-0">
+                  <div class="font-terminal text-[14px] md:text-[15px] leading-relaxed text-on-surface"
+                       [innerHTML]="formatDescription(i18n.getText(project.description, project.description_en))">
+                  </div>
                 </div>
 
-                <!-- TECH STACK (FIXED AT THE BOTTOM) -->
-                <div class="flex-shrink-0 border-t border-outline-variant/30 pt-4">
-                  <h5 class="font-pixel text-[10px] text-primary/60 mb-3 flex items-center gap-2">
+                <!-- TECH STACK (MOBILE ONLY) -->
+                <div class="flex-shrink-0 border-t border-outline-variant/30 pt-3 md:hidden">
+                  <h5 class="font-pixel text-[10px] text-primary/60 mb-2 flex items-center gap-2">
                     <span class="w-2 h-2 bg-primary-container"></span> {{ i18n.language() === 'es' ? 'TECNOLOGIAS_USADAS' : 'TECHNOLOGIES_USED' }}
                   </h5>
                   <div class="flex flex-wrap gap-2 max-h-[120px] overflow-y-auto custom-scrollbar">
                     @for (tech of project.technologies; track tech) {
-                      <span class="bg-surface-container-highest border border-outline px-3 py-1 font-label-mono text-[12px] hover:bg-primary-container hover:text-on-primary-container cursor-default transition-colors uppercase">
+                      <span class="bg-primary-container/10 border border-primary-container/40 text-primary-container px-3 py-1 font-label-mono text-[12px] hover:bg-primary-container hover:text-on-primary-container hover:shadow-[0_0_8px_rgba(0,243,255,0.6)] cursor-default transition-all uppercase">
                         {{ tech }}
                       </span>
                     }
@@ -269,15 +277,38 @@
         </div>
 
         <!-- WINDOW FOOTER ACTIONS -->
-        <div class="p-3 sm:p-6 border-t-2 border-dotted border-outline-variant flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-6 bg-surface-container-lowest/50">
-          <div class="hidden sm:flex items-center gap-4 text-primary/40 font-label-mono text-[12px]">
-            <span class="hidden sm:flex items-center gap-1">
+        <div class="p-3 sm:p-4 border-t-2 border-dotted border-outline-variant flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-6 bg-surface-container-lowest/50">
+          
+          <!-- DESKTOP TECH STACK & STATUS (HIDDEN ON MOBILE) -->
+          <div class="hidden md:flex flex-col gap-2 flex-1 mr-4 min-w-0">
+            <div class="flex items-center gap-3 text-primary/60 font-label-mono text-[11px]">
+              <span class="flex items-center gap-1 font-pixel text-[10px] text-primary-container">
+                <span class="w-2 h-2 bg-primary-container animate-pulse"></span> {{ i18n.language() === 'es' ? 'SISTEMA_ESTABLE' : 'SYSTEM_STABLE' }}
+              </span>
+              <span>|</span>
+              <span class="font-pixel text-[10px] text-secondary-container">{{ i18n.language() === 'es' ? 'CANT_TECNOLOGIAS' : 'TECH_COUNT' }}: {{ project.technologies.length }}</span>
+            </div>
+            
+            <div class="flex flex-wrap gap-1.5 max-h-[75px] overflow-y-auto custom-scrollbar">
+              @for (tech of project.technologies; track tech) {
+                <span class="bg-primary-container/10 border border-primary-container/40 text-primary-container px-2.5 py-0.5 font-label-mono text-[11px] hover:bg-primary-container hover:text-on-primary-container hover:shadow-[0_0_8px_rgba(0,243,255,0.6)] cursor-default transition-all uppercase">
+                  {{ tech }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- MOBILE STATUS (HIDDEN ON DESKTOP) -->
+          <div class="flex md:hidden items-center gap-4 text-primary/40 font-label-mono text-[12px]">
+            <span class="flex items-center gap-1 font-pixel text-[10px]">
               <span class="w-2 h-2 bg-primary-container animate-pulse"></span> {{ i18n.language() === 'es' ? 'SISTEMA_ESTABLE' : 'SYSTEM_STABLE' }}
             </span>
-            <span class="hidden md:block">|</span>
-            <span class="hidden md:block">{{ i18n.language() === 'es' ? 'CANT_TECNOLOGIAS' : 'TECH_COUNT' }}: {{ project.technologies.length }}</span>
+            <span>|</span>
+            <span class="font-pixel text-[10px]">{{ i18n.language() === 'es' ? 'CANT_TECNOLOGIAS' : 'TECH_COUNT' }}: {{ project.technologies.length }}</span>
           </div>
-          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+
+          <!-- ACTION BUTTONS -->
+          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto shrink-0">
             @if (project.url_demo) {
               <a [href]="project.url_demo" target="_blank" rel="noopener noreferrer"
                  class="w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2 bg-secondary-container text-on-secondary-container font-pixel text-[10px] sm:text-[12px] px-3 py-2 sm:px-6 sm:py-4 border-2 border-secondary shadow-[4px_4px_0px_0px_#00f3ff] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all active:scale-95 group uppercase">
@@ -308,6 +339,41 @@
         </div>
 
       </div>
+    </div>
+  }
+
+  <!-- FULLSCREEN IMAGE OVERLAY -->
+  @if (isFullscreen() && getProjectImages().length > 0) {
+    <div class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-2 md:p-8"
+         (click)="toggleFullscreen()">
+      
+      <!-- Close Button -->
+      <button (click)="toggleFullscreen()" 
+              class="absolute top-4 right-4 md:top-6 md:right-6 text-primary-container bg-black/80 border border-primary-container p-2 z-[110] md:hover:bg-primary-container md:hover:text-on-primary-container active:bg-primary-container active:text-on-primary-container transition-colors cursor-pointer" 
+              title="Cerrar pantalla completa">
+        <span class="material-symbols-outlined text-2xl md:text-4xl">close</span>
+      </button>
+      
+      <!-- Image Container -->
+      <div class="relative max-w-full max-h-full flex items-center justify-center" (click)="$event.stopPropagation()">
+        <img [src]="getProjectImages()[selectedImageIndex()]" 
+             [alt]="selectedProject()?.title || 'Fullscreen view'"
+             class="max-w-[95vw] md:max-w-[90vw] max-h-[80vh] md:max-h-[85vh] object-contain border-2 border-primary-container voxel-shadow-cyan" />
+      </div>
+
+      <!-- Navigation Arrows -->
+      @if (getProjectImages().length > 1) {
+        <button (click)="previousImage(); $event.stopPropagation()"
+                class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 bg-black/80 border border-primary-container md:border-2 p-1.5 md:p-3 text-primary-container md:hover:bg-primary-container md:hover:text-on-primary-container active:bg-primary-container active:text-on-primary-container transition-all cursor-pointer z-[110]"
+                aria-label="Previous image">
+          <span class="material-symbols-outlined text-xl md:text-3xl">chevron_left</span>
+        </button>
+        <button (click)="nextImage(); $event.stopPropagation()"
+                class="absolute right-2 md:left-auto md:right-8 top-1/2 -translate-y-1/2 bg-black/80 border border-primary-container md:border-2 p-1.5 md:p-3 text-primary-container md:hover:bg-primary-container md:hover:text-on-primary-container active:bg-primary-container active:text-on-primary-container transition-all cursor-pointer z-[110]"
+                aria-label="Next image">
+          <span class="material-symbols-outlined text-xl md:text-3xl">chevron_right</span>
+        </button>
+      }
     </div>
   }
 </section>
