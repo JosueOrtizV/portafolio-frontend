@@ -35,13 +35,13 @@
         </h3>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7">
           <h4
             class="font-label-mono text-secondary mb-4 uppercase text-[12px] tracking-widest border-b border-outline-variant pb-2">
-            {{ i18n.language() === 'es' ? 'MARCOS_TRABAJO' : 'CORE_FRAMEWORKS' }}
+            {{ i18n.language() === 'es' ? 'LENGUAJES_Y_FRAMEWORKS' : 'LANGUAGES_AND_FRAMEWORKS' }}
           </h4>
-          <ul class="space-y-3 font-label-mono text-on-surface">
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-label-mono text-on-surface">
             @for (skill of frontendSkillsFirstHalf(); track skill.id) {
             <li class="skills-frontend-item flex items-center gap-3 group hover:text-primary transition-colors duration-200 cursor-default opacity-0">
               @if (skill.icon) {
@@ -55,7 +55,7 @@
           </ul>
         </div>
 
-        <div>
+        <div class="lg:col-span-5">
           <h4
             class="font-label-mono text-secondary mb-4 uppercase text-[12px] tracking-widest border-b border-outline-variant pb-2">
             {{ i18n.language() === 'es' ? 'ESTILOS_Y_INTERFAZ' : 'STYLING_ENGINE' }}
@@ -199,10 +199,10 @@
     </section>
     }
 
-    <!-- Tooling Resources Card (3-col) -->
+    <!-- Tooling Resources Card -->
     @if (toolsSkills().length > 0) {
     <section
-      class="skills-card-tooling md:col-span-3 bg-surface-container-low border-2 border-outline voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
+      class="skills-card-tooling md:col-span-6 bg-surface-container-low border-2 border-outline voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <h3 class="font-label-mono text-label-mono text-primary flex items-center gap-2 font-bold">
           <span class="material-symbols-outlined text-[18px]">build</span>
@@ -210,7 +210,7 @@
         </h3>
       </div>
 
-      <div class="space-y-4 max-h-[220px] overflow-y-auto pr-1">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[260px] md:max-h-none overflow-y-auto md:overflow-visible pr-2 md:pr-0 custom-scrollbar">
         @for (skill of toolsSkills(); track skill.id) {
         <div class="skills-tool-item p-3 border border-outline-variant bg-surface-container-highest flex items-start gap-2.5 opacity-0">
           @if (skill.icon) {
@@ -231,10 +231,10 @@
     </section>
     }
 
-    <!-- Soft Skills / Neural System Card (3-col) -->
+    <!-- Soft Skills / Neural System Card -->
     @if (softSkills().length > 0) {
     <section
-      class="skills-card-soft md:col-span-3 bg-surface-container-low border-2 border-outline-variant voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
+      class="skills-card-soft md:col-span-6 bg-surface-container-low border-2 border-outline-variant voxel-shadow-primary p-6 transition-all duration-300 opacity-0">
       <div class="flex items-center gap-4 mb-8 terminal-header -mx-6 -mt-6 p-4">
         <h3 class="font-label-mono text-label-mono text-primary flex items-center gap-2 font-bold">
           <span class="material-symbols-outlined text-[18px]">psychology</span>
@@ -242,7 +242,7 @@
         </h3>
       </div>
 
-      <div class="space-y-3 font-label-mono text-on-surface text-[12px] max-h-[220px] overflow-y-auto pr-1">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-label-mono text-on-surface text-[12px] max-h-[260px] md:max-h-none overflow-y-auto md:overflow-visible pr-2 md:pr-0 custom-scrollbar">
         @for (skill of softSkills(); track skill.id) {
         <div class="skills-soft-item flex items-center gap-2 border-b border-outline-variant/30 pb-1 opacity-0">
           @if (skill.icon) {
